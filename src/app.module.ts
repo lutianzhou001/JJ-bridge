@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Account } from './account/account.entity';
 import { AccountModule } from './account/account.module';
+import { BlockchainModule } from './blockchain/blockchain.module';
+import { Blockchain } from './blockchain/blockchain.entity';
 
 @Module({
   imports: [
@@ -14,10 +16,11 @@ import { AccountModule } from './account/account.module';
       username: 'root',
       password: 'root',
       database: 'test',
-      entities: [Account],
+      entities: [Account, Blockchain],
       synchronize: true,
     }),
     AccountModule,
+    BlockchainModule,
   ],
   controllers: [AppController],
   providers: [AppService],

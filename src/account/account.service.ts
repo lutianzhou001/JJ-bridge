@@ -10,11 +10,13 @@ export class AccountService {
     private readonly accountRepository: Repository<Account>,
   ) {}
 
-  async findAll(): Promise<Account[]> {
-    return this.accountRepository.find();
+  async findAll() {
+    const result = await this.accountRepository.find();
+    // tslint:disable-next-line: no-console
+    console.log(result);
   }
 
-  async signUp(): Promise<Account> {
+  async apply(): Promise<Account> {
       const newAccount = new Account();
       newAccount.id = 200;
       newAccount.btcAddress = '0xhdiuafhiagfhiaw';

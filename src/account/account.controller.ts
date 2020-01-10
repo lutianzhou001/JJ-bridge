@@ -4,19 +4,19 @@ import { Account } from './account.entity';
 import { AccountDto } from './dto/account.dto';
 
 // 总路由
-@Controller('account')
+@Controller('accounts')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
-  @Get()
-  async findAll(): Promise<Account[]> {
-    return this.accountService.findAll();
+  @Get('myAccount')
+  async findAll() {
+    this.accountService.findAll();
   }
 
   // 注册路由
-  @Post('/signup')
-  async signUp(): Promise<AccountDto> {
-      return this.accountService.signUp();
+  @Post('/apply')
+  async apply(): Promise<AccountDto> {
+      return this.accountService.apply();
   }
 
   @Delete(':id')
