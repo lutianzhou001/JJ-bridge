@@ -16,4 +16,11 @@ export class Account {
 
   @Column({ type : 'varchar', length: 255, nullable: true})
   ethPrivateKey: string;
+
+  @Column({ type: 'integer', nullable: false})
+  isAllocated: number;
+
+  @Column({ type: 'integer', nullable: false})
+  isAvailable: number;
+
 }
