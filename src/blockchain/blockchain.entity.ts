@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Blockchain {
   @PrimaryGeneratedColumn()
-  blockHash: string;
+  id: number;
 
   @Column({ type : 'integer', nullable: false})
   blockNumber: number;
@@ -15,7 +15,7 @@ export class Blockchain {
   to: string;
 
   @Column({ type : 'double', nullable: false})
-  amount: number;
+  value: number;
 
   @Column({ type: 'integer', nullable: false})
   isERC20: boolean;
@@ -23,4 +23,6 @@ export class Blockchain {
   @Column({ type: 'varchar', length: 255, nullable: true})
   contractAddress: string;
 
+  @Column({type: 'varchar', nullable: false})
+  transactionHash: string;
 }
