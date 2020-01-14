@@ -8,7 +8,12 @@ export class BlockchainController {
 
   // 注册路由
   @Post('/fetch')
-  async apply() {
+  async fetch() {
+      return this.blockchainService.fetch();
+  }
+
+  @Post('/check')
+  async check() {
       return this.blockchainService.check();
   }
 }
