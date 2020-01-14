@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { BlockchainService } from './blockchain.service';
 import { BlockchainController } from './blockchain.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Blockchain } from './blockchain.entity';
+import { Blockchain,Account } from '../database/database.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Blockchain])],
+  imports: [TypeOrmModule.forFeature([Blockchain,Account])],
   providers: [BlockchainService],
   controllers: [BlockchainController],
 })

@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Account } from './account/account.entity';
+import { Account,Blockchain } from './database/database.entity';
 import { AccountModule } from './account/account.module';
 import { BlockchainModule } from './blockchain/blockchain.module';
-import { Blockchain } from './blockchain/blockchain.entity';
 
 @Module({
   imports: [

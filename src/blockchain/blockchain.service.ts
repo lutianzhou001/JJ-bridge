@@ -1,16 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Blockchain } from './blockchain.entity';
-import { max } from 'bn.js';
-import { toUnicode } from 'punycode';
+import { Blockchain,Account } from '../database/database.entity';
 // here we can't import web3 into Ts. For more you can refer to "https://github.com/ethereum/web3.js/issues/1597"
-// tslint:disable-next-line: no-var-requires
 const Web3 = require('web3');
-// tslint:disable-next-line: no-var-requires
 const abiDecoder = require('abi-decoder');
-
-// tslint:disable-next-line: prefer-const
 const web3 = new Web3(new Web3.providers.HttpProvider('http://47.75.214.198:8545'));
 
 const abi = [
@@ -256,6 +250,8 @@ const queryTransaction = async (transactionHash) => {
 @Injectable()
 export class BlockchainService {
     constructor(
+        @InjectRepository(Account)
+        private readonly accountRepository: Repository<Account>,
         @InjectRepository(Blockchain)
         private readonly blockchainRepository: Repository<Blockchain>,
     ) { }
@@ -263,6 +259,13 @@ export class BlockchainService {
     async attach() {
         // tslint:disable-next-line: no-console
         console.log('here is a sample');
+    }
+
+    async findUsers(): Promise<Account[]> {
+        const result = await this.accountRepository.find({
+            where: { isAvailable: 1 },
+        })
+        return result;
     }
 
     async check() {
@@ -291,32 +294,38 @@ export class BlockchainService {
                 // tslint:disable-next-line: prefer-for-of
                 for (let j = 0; j < block.transactions.length; j++) {
                     const transaction = await queryTransaction(block.transactions[j]).catch(err => console.log(err));
-                        // TODO: 还需要判断TO是否在用户清单里，如果不在，则次交易可以不入库；
-                        // 如果判断到input是0x的话，表示是一个普通的转账交易，取出FROM和TO即可
-                    if (transaction.input === '0x') {
-                        const newTransaction = new Blockchain();
-                        newTransaction.blockNumber = transaction.blockNumber;
-                        newTransaction.value = transaction.value;
-                        newTransaction.transactionHash = transaction.hash;
-                        newTransaction.from = transaction.from;
-                        newTransaction.to = transaction.to;
-                        newTransaction.isERC20 = false;
-                        await this.blockchainRepository.save(newTransaction);
-                    }
-                    const decodeData = abiDecoder.decodeMethod(transaction.input);
-                    if (decodeData) {
-                        const newTransaction = new Blockchain();
-                        newTransaction.blockNumber = transaction.blockNumber;
-                        newTransaction.contractAddress = transaction.to;
-                        newTransaction.value = decodeData.params[1].value;
-                        newTransaction.transactionHash = transaction.hash;
-                        newTransaction.from = transaction.from;
-                        newTransaction.to = decodeData.params[0].value;
-                        newTransaction.isERC20 = true;
-                        await this.blockchainRepository.save(newTransaction);
+                    const users = await this.findUsers();
+                    for (let i = 0; i < users.length; i++) {
+                        // 这里还需要看下合约地址是否是配置中的ERC20如果不是，则也可以不入库
+                        if (users[i].ethAddress === transaction.to) {
+                            if (transaction.input === '0x') {
+                                const newTransaction = new Blockchain();
+                                newTransaction.blockNumber = transaction.blockNumber;
+                                newTransaction.value = transaction.value;
+                                newTransaction.transactionHash = transaction.hash;
+                                newTransaction.from = transaction.from;
+                                newTransaction.to = transaction.to;
+                                newTransaction.isERC20 = false;
+                                await this.blockchainRepository.save(newTransaction);
+                            } else {
+                                const decodeData = abiDecoder.decodeMethod(transaction.input);
+                                if (decodeData) {
+                                    const newTransaction = new Blockchain();
+                                    newTransaction.blockNumber = transaction.blockNumber;
+                                    newTransaction.contractAddress = transaction.to;
+                                    newTransaction.value = decodeData.params[1].value;
+                                    newTransaction.transactionHash = transaction.hash;
+                                    newTransaction.from = transaction.from;
+                                    newTransaction.to = decodeData.params[0].value;
+                                    newTransaction.isERC20 = true;
+                                    await this.blockchainRepository.save(newTransaction);
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
 }
+

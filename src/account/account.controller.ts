@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Delete, Param } from '@nestjs/common';
 import { AccountService } from './account.service';
-import { Account } from './account.entity';
 import { AccountDto } from './dto/account.dto';
 
 // 总路由
