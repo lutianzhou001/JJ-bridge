@@ -1,12 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Blockchain, Account } from '../database/database.entity';
-import { exportAllDeclaration } from '@babel/types';
+import * as Request from "request-promise-native"
+import { resolve } from 'url';
+const request = require('request');
 // here we can't import web3 into Ts. For more you can refer to "https://github.com/ethereum/web3.js/issues/1597"
 const Web3 = require('web3');
 const abiDecoder = require('abi-decoder');
 const web3 = new Web3(new Web3.providers.HttpProvider('http://47.75.214.198:8545'));
+const endPoint = "https://mainnet.infura.io/v3/b7b3b54135a548e6b52c32fc9b62436a"
 
 const abi = [
     {
@@ -269,7 +272,7 @@ export class BlockchainService {
         return result;
     }
 
-    async check() {
+    async collection() {
         // we want to check the data with infura.io
         // 读取表
         let tobeUpdated = [];
@@ -283,8 +286,38 @@ export class BlockchainService {
         console.log(tobeUpdated);
 
         // to find the address which in the tobeUpdated;
-        const details = await this.blockchainRepository.createQueryBuilder().select().where("`to` IN (:addresses)", { addresses : tobeUpdated}).getMany();
-        // 开始验证details的有效性，如果有效，送balance.update
+        const details = await this.blockchainRepository.createQueryBuilder().select().where("`to` IN (:addresses)", { addresses: tobeUpdated }).getMany();
+        // 开始验证details的有效性，如果有效，送归集
+        console.log(details[0].isChecked)
+
+    }
+
+    async check(hash, from, to, value, input): Promise<Boolean> {
+        let result: any = {};
+        var headers = {
+            'Content-Type': 'application/json'
+        };
+        var dataString = '{"jsonrpc":"2.0","method":"eth_getTransactionReceipt","params": ["0xbb3a336e3f823ec18197f1e13ee875700f08f03e2cab75f0d0b118dabb44cba0"],"id":1}';
+        var options = {
+            url: endPoint,
+            method: 'POST',
+            headers: headers,
+            body: dataString,
+        };
+        var promiseCheck = new Promise(function (resolve, reject) {
+            request(options, function (error, response, body) {
+                resolve(body.result)
+            });
+        });
+        result = await promiseCheck.then(function (value) { return value })
+        // 不知道怎么解RESULT
+        return true;
+    }
+
+    async engine(value, id): Promise<Boolean> {
+        // TODO
+        // send to engine
+        return true
     }
 
     async fetch() {
@@ -325,19 +358,51 @@ export class BlockchainService {
                                     newTransaction.from = transaction.from;
                                     newTransaction.to = transaction.to;
                                     newTransaction.isERC20 = false;
-                                    await this.blockchainRepository.save(newTransaction);
-                                } else {
-                                    const decodeData = abiDecoder.decodeMethod(transaction.input);
-                                    if (decodeData) {
-                                        const newTransaction = new Blockchain();
-                                        newTransaction.blockNumber = transaction.blockNumber;
-                                        newTransaction.contractAddress = transaction.to;
-                                        newTransaction.value = decodeData.params[1].value;
-                                        newTransaction.transactionHash = transaction.hash;
-                                        newTransaction.from = transaction.from;
-                                        newTransaction.to = decodeData.params[0].value;
-                                        newTransaction.isERC20 = true;
-                                        await this.blockchainRepository.save(newTransaction);
+                                    const result = await this.blockchainRepository.save(newTransaction);
+                                    if (result) {
+                                        const checkResult = await this.check(transaction.hash, transaction.from, transaction.to, transaction.value, transaction.input);
+                                        if (checkResult === true) {
+                                            const engineResult = await this.engine(transaction.value, users[i].id)
+                                            if (engineResult) {
+                                                const update = await this.blockchainRepository.update(
+                                                    1,
+                                                    { id: users[i].id },
+                                                )
+                                                if (update) {
+                                                    console.log("update Success");
+                                                    // 流程至此结束
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                const decodeData = abiDecoder.decodeMethod(transaction.input);
+                                if (decodeData) {
+                                    const newTransaction = new Blockchain();
+                                    newTransaction.blockNumber = transaction.blockNumber;
+                                    newTransaction.contractAddress = transaction.to;
+                                    newTransaction.value = decodeData.params[1].value;
+                                    newTransaction.transactionHash = transaction.hash;
+                                    newTransaction.from = transaction.from;
+                                    newTransaction.to = decodeData.params[0].value;
+                                    newTransaction.isERC20 = true;
+                                    const result = await this.blockchainRepository.save(newTransaction);
+                                    if (result) {
+                                        const checkResult = await this.check(transaction.hash, transaction.from, transaction.to, transaction.value, transaction.input);
+                                        if (checkResult === true) {
+                                            const engineResult = await this.engine(transaction.value, users[i].id)
+                                            if (engineResult) {
+                                                const update = await this.blockchainRepository.update(
+                                                    1,
+                                                    { id: users[i].id },
+                                                )
+                                                if (update) {
+                                                    console.log("update Success");
+                                                    // 流程至此结束
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }

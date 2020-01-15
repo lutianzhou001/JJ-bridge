@@ -31,6 +31,9 @@ export class Blockchain {
 
   @Column({ type: 'integer', nullable: false })
   isUpdated: number;
+
+  @Column({ type: 'integer', nullable: false })
+  isCollected: number;
 }
 
 @Entity()
