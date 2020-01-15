@@ -12,8 +12,8 @@ export class BlockchainController {
       return this.blockchainService.fetch();
   }
 
-  @Post('/check')
-  async check() {
-      return this.blockchainService.check();
-  }
+  //@Post('/check')
+  //async check() {
+  //    return this.blockchainService.check();
+  // }
 }
