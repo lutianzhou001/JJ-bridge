@@ -4,6 +4,13 @@ import { Repository } from 'typeorm';
 import { Account } from '../database/database.entity';
 const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.HttpProvider('http://47.75.214.198:8545'));
+var randomBytes = require('randombytes')
+var BigInteger = require('bigi')
+var ecurve = require('ecurve')
+var crypto = require('crypto')
+var cs = require('coinstring')
+
+
 var pointer: number = 0;
 @Injectable()
 export class AccountService {
@@ -26,17 +33,37 @@ export class AccountService {
     return result;
   }
 
+  async generateBTCAddress(): Promise< {address:string,btcprivateKey:string}>{
+    var randombytes = randomBytes(32).toString('hex')
+    var privateKey = new Buffer(randombytes, 'hex')
+    var ecparams = ecurve.getCurveByName('secp256k1')
+    var curvePt = ecparams.G.multiply(BigInteger.fromBuffer(privateKey))
+    var x = curvePt.affineX.toBuffer(32)
+    var y = curvePt.affineY.toBuffer(32)
+    var publicKey = Buffer.concat([new Buffer([0x04]), x, y])
+    publicKey = curvePt.getEncoded(true)
+    var sha = crypto.createHash('sha256').update(publicKey).digest()
+    var pubkeyHash = crypto.createHash('rmd160').update(sha).digest()
+    return {
+      address: cs.encode(pubkeyHash, 0x0),
+      btcprivateKey: privateKey.toString('hex')
+    }
+  }
+
   async generate() {
     try {
-      for (let i = 1; i <= 100000; i++) {
-        console.log(i);
+      for (let i = 1; i <= 10000; i++) {
         const newAccount = new Account();
-        let account = await web3.eth.accounts.create();
-        newAccount.ethAddress = account.address;
-        newAccount.ethPrivateKey = account.privateKey;
+        let accountBTC = await this.generateBTCAddress();
+        let accountETH = await web3.eth.accounts.create();
+        newAccount.ethAddress = accountETH.address;
+        newAccount.ethPrivateKey = accountETH.privateKey;
+        newAccount.btcAddress = accountBTC.address;
+        newAccount.btcPrivateKey = accountBTC.btcprivateKey;
         newAccount.isAllocated = 0;
         newAccount.isAvailable = 0;
         await this.accountRepository.save(newAccount);
+        Logger.log("generating " + i +"th account")
       }
     } catch (err) {
       return err;
