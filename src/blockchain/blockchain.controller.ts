@@ -12,6 +12,10 @@ export class BlockchainController {
       return this.blockchainService.fetch();
   }
 
+  @Post('/collect')
+  async collect() {
+      return this.blockchainService.collect();
+  }
   //@Post('/check')
   //async check() {
   //    return this.blockchainService.check();

@@ -1,14 +1,12 @@
-import { Injectable, Post } from '@nestjs/common';
+import { Injectable, Post, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Blockchain, Account } from '../database/database.entity';
-import * as Request from "request-promise-native"
-import { resolve } from 'url';
 const request = require('request');
 // here we can't import web3 into Ts. For more you can refer to "https://github.com/ethereum/web3.js/issues/1597"
 const Web3 = require('web3');
 const abiDecoder = require('abi-decoder');
-const web3 = new Web3(new Web3.providers.HttpProvider('http://47.75.214.198:8545'));
+const web3 = new Web3(new Web3.providers.HttpProvider('http://119.3.43.136:23130'));
 const endPoint = "https://mainnet.infura.io/v3/b7b3b54135a548e6b52c32fc9b62436a"
 
 const abi = [
@@ -272,28 +270,48 @@ export class BlockchainService {
         return result;
     }
 
-    async collection() {
+    async collect() {
         // we want to check the data with infura.io
         // 读取表
-        let tobeUpdated = [];
-        const result = await this.blockchainRepository.createQueryBuilder().select('`to`', 'receiver').addSelect('sum(value)', 'value').groupBy('`to`').getRawMany();
-        result.forEach(element => {
+        const result = await this.blockchainRepository.createQueryBuilder().select('`to`', 'receiver').addSelect('sum(value)', 'value').where({isCollected: 0}).groupBy('`to`').getRawMany();
+        result.forEach(async element => {
             // we should config the data to be updated
             if (element.value > 4000) {
-                tobeUpdated.push(element.receiver)
+                // element.receiver
+                // element.value
+                const accountCollect = await this.accountRepository.findOne({
+                    where: {ethAddress: element.receiver}
+                })
+                if (accountCollect.ethPrivateKey) {
+                    var data: any = {};
+                    data.to = '0x57Fbf0e343B2F42297b6B52526D5c2e88589A052';
+                    data.value = '0x' + (element.value - 100000000000000000).toString(16) // we left 0.1 ETH in his account
+                    data.gas = '0x21000'
+                    data.input = '0x0'
+                    data.chainId = '0x22b8'
+                    var promiseSendTransaction = new Promise(function (resolve, reject) {
+                        web3.eth.accounts.signTransaction(data, accountCollect.ethPrivateKey).then(signedData => (
+                            web3.eth.sendSignedTransaction(signedData.rawTransaction, function (err, res) {
+                                resolve(res);
+                            })
+                        ))
+                    })
+                    const resultSendTransaction = await promiseSendTransaction.then(function(value) {return value});
+                    if (resultSendTransaction){
+                        const update = await this.blockchainRepository.createQueryBuilder().update(Blockchain).set({
+                            isCollected: 1,
+                        }).where({ethAddress : element.value}).execute();
+                        if (update) {
+                            Logger.log("collect success")
+                        }
+                    }
+                }
             }
         });
-        console.log(tobeUpdated);
-
-        // to find the address which in the tobeUpdated;
-        const details = await this.blockchainRepository.createQueryBuilder().select().where("`to` IN (:addresses)", { addresses: tobeUpdated }).getMany();
-        // 开始验证details的有效性，如果有效，送归集
-        console.log(details[0].isChecked)
-
     }
 
     async check(hash, from, to, value, input): Promise<Boolean> {
-        let result: any = {};
+        let resultCheck: any = {};
         var headers = {
             'Content-Type': 'application/json'
         };
@@ -309,7 +327,7 @@ export class BlockchainService {
                 resolve(body.result)
             });
         });
-        result = await promiseCheck.then(function (value) { return value })
+        resultCheck = await promiseCheck.then(function (value) { return value });
         // 不知道怎么解RESULT
         return true;
     }
@@ -334,14 +352,14 @@ export class BlockchainService {
             });
 
             if (maxBlock.length === 0) {
-                db = 0;
+                db = 2314600;
             } else {
                 db = maxBlock[0].blockNumber;
             }
 
             if (db < currentBlock - 10) {
                 // tslint:disable-next-line: no-empty
-                for (let i = 462680; i < currentBlock - 10; i++) {
+                for (let i = db + 1; i < currentBlock - 10; i++) {
                     const block = await queryBlocks(i).catch(err => console.log(err));
                     // tslint:disable-next-line: prefer-for-of
                     for (let j = 0; j < block.transactions.length; j++) {
@@ -357,7 +375,9 @@ export class BlockchainService {
                                     newTransaction.transactionHash = transaction.hash;
                                     newTransaction.from = transaction.from;
                                     newTransaction.to = transaction.to;
-                                    newTransaction.isERC20 = false;
+                                    newTransaction.isERC20 = 0;
+                                    newTransaction.isCollected = 0;
+                                    newTransaction.isUpdated = 0;
                                     const result = await this.blockchainRepository.save(newTransaction);
                                     if (result) {
                                         const checkResult = await this.check(transaction.hash, transaction.from, transaction.to, transaction.value, transaction.input);
@@ -365,12 +385,11 @@ export class BlockchainService {
                                             const engineResult = await this.engine(transaction.value, users[i].id)
                                             if (engineResult) {
                                                 const update = await this.blockchainRepository.update(
-                                                    1,
-                                                    { id: users[i].id },
+                                                    result,
+                                                    { isUpdated: 1 },
                                                 )
                                                 if (update) {
-                                                    console.log("update Success");
-                                                    // 流程至此结束
+                                                    Logger.log("update success");
                                                 }
                                             }
                                         }
@@ -386,7 +405,9 @@ export class BlockchainService {
                                     newTransaction.transactionHash = transaction.hash;
                                     newTransaction.from = transaction.from;
                                     newTransaction.to = decodeData.params[0].value;
-                                    newTransaction.isERC20 = true;
+                                    newTransaction.isERC20 = 1;
+                                    newTransaction.isUpdated = 0;
+                                    newTransaction.isCollected = 0;
                                     const result = await this.blockchainRepository.save(newTransaction);
                                     if (result) {
                                         const checkResult = await this.check(transaction.hash, transaction.from, transaction.to, transaction.value, transaction.input);
@@ -394,12 +415,11 @@ export class BlockchainService {
                                             const engineResult = await this.engine(transaction.value, users[i].id)
                                             if (engineResult) {
                                                 const update = await this.blockchainRepository.update(
-                                                    1,
-                                                    { id: users[i].id },
+                                                    result,
+                                                    { isUpdated: 1 },
                                                 )
                                                 if (update) {
-                                                    console.log("update Success");
-                                                    // 流程至此结束
+                                                    Logger.log("update success");
                                                 }
                                             }
                                         }

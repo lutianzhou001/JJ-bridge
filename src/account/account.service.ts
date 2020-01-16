@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Account } from '../database/database.entity';
@@ -61,10 +61,10 @@ export class AccountService {
         newAccount.id = thisApply[0].id;
         newAccount.ethAddress = thisApply[0].ethAddress;
         pointer = pointer + 1;
+        Logger.log("apply success");
         return newAccount;
       }
     } else {
-      console.log("go here")
       for (let i = 1; i <= 100000; i++) {
         const r = await this.accountRepository.find({
           where: { id: i }
@@ -82,26 +82,12 @@ export class AccountService {
           newAccount.id = thisApply[0].id;
           newAccount.ethAddress = thisApply[0].ethAddress;
           pointer = pointer + 1;
+          Logger.log("apply success");
           return newAccount;
         }
       }
     }
   }
-  /*
-  const newAccount = new Account();
-  newAccount.id = 200;
-  newAccount.btcAddress = '0xhdiuafhiagfhiaw';
-  newAccount.ethAddress = '0xsdhjaiofhweiofh';
-  newAccount.btcPrivateKey = 'aojcsfjhaioehgveuihuhaoubheo';
-  newAccount.ethPrivateKey = 'asdafgegageagaefaevfaevgabae';
-  try {
-    await this.accountRepository.save(newAccount);
-    return newAccount;
-  } catch (err) {
-    return err;
-  }
-  */
-
 
   async destroyAccount(id: number) {
     try {

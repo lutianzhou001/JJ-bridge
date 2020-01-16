@@ -5,6 +5,9 @@ export class Blockchain {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'varchar', nullable: false })
+  transactionHash: string;
+
   @Column({ type: 'integer', nullable: false })
   blockNumber: number;
 
@@ -18,16 +21,10 @@ export class Blockchain {
   value: number;
 
   @Column({ type: 'integer', nullable: false })
-  isERC20: boolean;
+  isERC20: number;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   contractAddress: string;
-
-  @Column({ type: 'varchar', nullable: false })
-  transactionHash: string;
-
-  @Column({ type: 'integer', nullable: false })
-  isChecked: number;
 
   @Column({ type: 'integer', nullable: false })
   isUpdated: number;
