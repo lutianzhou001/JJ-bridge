@@ -11,7 +11,7 @@ import { BlockchainModule } from './blockchain/blockchain.module';
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'hudex-database',
-      port: 23306,
+      port: 3306,
       username: 'root',
       password: 'root',
       database: 'test',

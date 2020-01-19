@@ -1,14 +1,13 @@
-FROM node:10.13.0-alpine
+FROM alpine
+FROM node:10
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY . .
 RUN npm install
 RUN npm install pm2 -g
 RUN npm i -g typescript
 RUN npm run build
 
-COPY ./dist .
-
 EXPOSE 3000
 
-CMD [ "pm2-runtime", "main.js" ]
+CMD [ "pm2-runtime", "./dist/main.js" ]

@@ -10,7 +10,7 @@ export class AppService {
     }
   }
   postDestroy(): object {
-    return 
+    return
   }
   getQuery(): object {
     return
