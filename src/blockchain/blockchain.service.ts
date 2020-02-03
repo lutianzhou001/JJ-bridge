@@ -8,7 +8,7 @@ const Web3 = require('web3');
 const abiDecoder = require('abi-decoder');
 const web3 = new Web3(new Web3.providers.HttpProvider('http://119.3.43.136:23130'));
 const endPoint = "https://mainnet.infura.io/v3/b7b3b54135a548e6b52c32fc9b62436a"
-
+const hotWallet = { address: '0x57Fbf0e343B2F42297b6B52526D5c2e88589A052', ethPrivateKey: '0x123'};
 const abi = [
     {
         'constant': true,
@@ -270,37 +270,100 @@ export class BlockchainService {
         return result;
     }
 
+    async withdraw(value, id, coin_name, address) {
+        // 第一步，从engine中update balance
+        const engineResult = await this.engine(value, id, coin_name);
+        if (engineResult) {
+            var resultBalance = await this.getBalance('ETH', address);
+            if (resultBalance > value) {
+                //可用余额充足，可以发送ETH
+                let withdrawResult = await this.transfer(address, value, 'ETH', hotWallet.ethPrivateKey);
+                if (withdrawResult) {
+                    return {
+                        result: true,
+                        errMessage: null
+                    }
+                }
+            } else {
+                return {
+                    result: false,
+                    errMessage: 'insuffcient balance'
+                }
+            }
+        }
+    }
+
+    async getBalance(coin_name, currentAddress) {
+        if (coin_name == 'ETH') {
+            let resultBalance = await web3.eth.getBalance(hotWallet.address);
+            return resultBalance;
+        } else {
+            var myContract = new web3.eth.Contract(abi, coin_name, {
+                from: hotWallet.address,
+                gasPrice: '1000000000'
+            })
+            myContract.methods.balanceOf(coin_name).call({from: currentAddress}, function(err,res){
+                if (!err) {
+                    Logger.log(res)
+                } else {
+                    Logger.log(err)
+                }
+            })
+        }
+    }
+
+    async transfer(to, value, coin_name, ethPrivateKey) {
+        var data: any = {}
+        data.to = to;
+        data.value = value;
+        data.gas = '0x21000';
+        data.chainId = '0x22b8'
+        if (coin_name == "ETH") {
+            data.input = '0x';
+            let signedData = await web3.eth.signTransaction(data, ethPrivateKey);
+            if (signedData) {
+                let resultTransferETH = await web3.eth.sendSignedTransaction(signedData.rawTransaction);
+                return resultTransferETH;
+            }
+        } else {
+            var addPreZero = (num) => {
+                var t = (num+'').length,
+                s = '';
+                for(var i=0; i<64-t; i++){
+                  s += '0';
+                }
+                return s+num;
+              }
+            data.input = '0x' + 'a9059cbb' + addPreZero(to) + addPreZero(web3.utils.toHex(value).substr(2)) //T0DO TO是去掉0x的
+            let signedData = await web3.eth.signTransaction(data, ethPrivateKey);
+            if (signedData) {
+                let resultTransferERC20 = await web3.eth.sendSignedTransaction(signedData.rawTransaction);
+                return resultTransferERC20;
+            }
+        }
+    }
+
     async collect() {
         // we want to check the data with infura.io
         // 读取表
-        const result = await this.blockchainRepository.createQueryBuilder().select('`to`', 'receiver').addSelect('sum(value)', 'value').where({isCollected: 0}).groupBy('`to`').getRawMany();
+        const result = await this.blockchainRepository.createQueryBuilder().select('`to`', 'receiver').addSelect('sum(value)', 'value').where({ isCollected: 0 }).groupBy('`to`').getRawMany();
         result.forEach(async element => {
             // we should config the data to be updated
             if (element.value > 4000) {
                 // element.receiver
                 // element.value
                 const accountCollect = await this.accountRepository.findOne({
-                    where: {ethAddress: element.receiver}
+                    where: { ethAddress: element.receiver }
                 })
                 if (accountCollect.ethPrivateKey) {
                     var data: any = {};
-                    data.to = '0x57Fbf0e343B2F42297b6B52526D5c2e88589A052';
+                    data.to = hotWallet.address;
                     data.value = '0x' + (element.value - 100000000000000000).toString(16) // we left 0.1 ETH in his account
-                    data.gas = '0x21000'
-                    data.input = '0x0'
-                    data.chainId = '0x22b8'
-                    var promiseSendTransaction = new Promise(function (resolve, reject) {
-                        web3.eth.accounts.signTransaction(data, accountCollect.ethPrivateKey).then(signedData => (
-                            web3.eth.sendSignedTransaction(signedData.rawTransaction, function (err, res) {
-                                resolve(res);
-                            })
-                        ))
-                    })
-                    const resultSendTransaction = await promiseSendTransaction.then(function(value) {return value});
-                    if (resultSendTransaction){
+                    let resultSendTransaction = await this.transfer(data.to, data.value, "ETH", accountCollect.ethPrivateKey)
+                    if (resultSendTransaction) {
                         const update = await this.blockchainRepository.createQueryBuilder().update(Blockchain).set({
                             isCollected: 1,
-                        }).where({ethAddress : element.value}).execute();
+                        }).where({ ethAddress: element.value }).execute();
                         if (update) {
                             Logger.log("collect success")
                         }
@@ -310,6 +373,7 @@ export class BlockchainService {
         });
     }
 
+    // 函数作用，从INFURA.IO 上再检查一遍 交易是否存在了
     async check(hash, from, to, value, input): Promise<Boolean> {
         let resultCheck: any = {};
         var headers = {
@@ -332,7 +396,7 @@ export class BlockchainService {
         return true;
     }
 
-    async engine(value, id): Promise<Boolean> {
+    async engine(value, id, coin_name): Promise<Boolean> {
         // TODO
         // send to engine
         return true
@@ -382,7 +446,7 @@ export class BlockchainService {
                                     if (result) {
                                         const checkResult = await this.check(transaction.hash, transaction.from, transaction.to, transaction.value, transaction.input);
                                         if (checkResult === true) {
-                                            const engineResult = await this.engine(transaction.value, users[i].id)
+                                            const engineResult = await this.engine(transaction.value, users[i].id, "ETH")
                                             if (engineResult) {
                                                 const update = await this.blockchainRepository.update(
                                                     result,
@@ -412,7 +476,8 @@ export class BlockchainService {
                                     if (result) {
                                         const checkResult = await this.check(transaction.hash, transaction.from, transaction.to, transaction.value, transaction.input);
                                         if (checkResult === true) {
-                                            const engineResult = await this.engine(transaction.value, users[i].id)
+                                            //TODO 找出该币种，暂时写为USDT
+                                            const engineResult = await this.engine(transaction.value, users[i].id, "USDT")
                                             if (engineResult) {
                                                 const update = await this.blockchainRepository.update(
                                                     result,

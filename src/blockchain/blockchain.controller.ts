@@ -16,8 +16,14 @@ export class BlockchainController {
   async collect() {
       return this.blockchainService.collect();
   }
+
   //@Post('/check')
   //async check() {
   //    return this.blockchainService.check();
   // }
+
+  @Post('/withdraw:value:id:coin_name:address')
+  async withdraw(@Param() params) {
+    return this.blockchainService.withdraw(params.value, params.id,params.coin_name,params.address);
+  }
 }
