@@ -22,7 +22,7 @@ export class BlockchainController {
   //    return this.blockchainService.check();
   // }
 
-  @Post('/withdraw:value:id:coin_name:address')
+  @Post('/withdraw/:value/:id/:coin_name/:address')
   async withdraw(@Param() params) {
     return this.blockchainService.withdraw(params.value, params.id,params.coin_name,params.address);
   }

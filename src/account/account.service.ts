@@ -33,7 +33,7 @@ export class AccountService {
     return result;
   }
 
-  async generateBTCAddress(): Promise< {address:string,btcprivateKey:string}>{
+  async generateBTCAddress(): Promise<{ address: string, btcprivateKey: string }> {
     var randombytes = randomBytes(32).toString('hex')
     var privateKey = new Buffer(randombytes, 'hex')
     var ecparams = ecurve.getCurveByName('secp256k1')
@@ -52,7 +52,7 @@ export class AccountService {
 
   async generate() {
     try {
-      for (let i = 1; i <= 10000; i++) {
+      for (let i = 1; i <= 1000; i++) {
         const newAccount = new Account();
         let accountBTC = await this.generateBTCAddress();
         let accountETH = await web3.eth.accounts.create();
@@ -63,10 +63,14 @@ export class AccountService {
         newAccount.isAllocated = 0;
         newAccount.isAvailable = 0;
         await this.accountRepository.save(newAccount);
-        Logger.log("generating " + i +"th account")
+        Logger.log("generating " + i + "th account")
       }
     } catch (err) {
-      return err;
+      if (err) {
+        return err
+      } else {
+        return { result: true, errMessge: 'generate completed.' }
+      }
     }
   }
 

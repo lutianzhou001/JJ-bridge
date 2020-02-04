@@ -8,7 +8,7 @@ const Web3 = require('web3');
 const abiDecoder = require('abi-decoder');
 const web3 = new Web3(new Web3.providers.HttpProvider('http://119.3.43.136:23130'));
 const endPoint = "https://mainnet.infura.io/v3/b7b3b54135a548e6b52c32fc9b62436a"
-const hotWallet = { address: '0x57Fbf0e343B2F42297b6B52526D5c2e88589A052', ethPrivateKey: '0x123'};
+const hotWallet = { address: '0x57Fbf0e343B2F42297b6B52526D5c2e88589A052', ethPrivateKey: 'f869cfe80454e8c14223b778801894d2c3c84d91ed3010a1604bfee59319082c'};
 const abi = [
     {
         'constant': true,
@@ -272,12 +272,13 @@ export class BlockchainService {
 
     async withdraw(value, id, coin_name, address) {
         // 第一步，从engine中update balance
+        Logger.log("Withdraw begins");
         const engineResult = await this.engine(value, id, coin_name);
         if (engineResult) {
-            var resultBalance = await this.getBalance('ETH', address);
+            var resultBalance = await this.getBalance('ETH', hotWallet.address);
             if (resultBalance > value) {
                 //可用余额充足，可以发送ETH
-                let withdrawResult = await this.transfer(address, value, 'ETH', hotWallet.ethPrivateKey);
+                let withdrawResult = await this.transfer(hotWallet.address, address, value, 'ETH', hotWallet.ethPrivateKey);
                 if (withdrawResult) {
                     return {
                         result: true,
@@ -312,15 +313,17 @@ export class BlockchainService {
         }
     }
 
-    async transfer(to, value, coin_name, ethPrivateKey) {
+    async transfer(from, to, value, coin_name, ethPrivateKey) {
         var data: any = {}
+        data.nonce = await web3.eth.getTransactionCount(from);
+        data.from = from;
         data.to = to;
         data.value = value;
         data.gas = '0x21000';
         data.chainId = '0x22b8'
         if (coin_name == "ETH") {
             data.input = '0x';
-            let signedData = await web3.eth.signTransaction(data, ethPrivateKey);
+            let signedData = await web3.eth.accounts.signTransaction(data, ethPrivateKey);
             if (signedData) {
                 let resultTransferETH = await web3.eth.sendSignedTransaction(signedData.rawTransaction);
                 return resultTransferETH;
@@ -334,7 +337,8 @@ export class BlockchainService {
                 }
                 return s+num;
               }
-            data.input = '0x' + 'a9059cbb' + addPreZero(to) + addPreZero(web3.utils.toHex(value).substr(2)) //T0DO TO是去掉0x的
+            let subto = to.substr(2);
+            data.input = '0x' + 'a9059cbb' + addPreZero(subto) + addPreZero(web3.utils.toHex(value).substr(2)) //T0DO TO是去掉0x的
             let signedData = await web3.eth.signTransaction(data, ethPrivateKey);
             if (signedData) {
                 let resultTransferERC20 = await web3.eth.sendSignedTransaction(signedData.rawTransaction);
@@ -359,7 +363,7 @@ export class BlockchainService {
                     var data: any = {};
                     data.to = hotWallet.address;
                     data.value = '0x' + (element.value - 100000000000000000).toString(16) // we left 0.1 ETH in his account
-                    let resultSendTransaction = await this.transfer(data.to, data.value, "ETH", accountCollect.ethPrivateKey)
+                    let resultSendTransaction = await this.transfer(accountCollect.ethAddress, data.to, data.value, "ETH", accountCollect.ethPrivateKey)
                     if (resultSendTransaction) {
                         const update = await this.blockchainRepository.createQueryBuilder().update(Blockchain).set({
                             isCollected: 1,
@@ -388,7 +392,7 @@ export class BlockchainService {
         };
         var promiseCheck = new Promise(function (resolve, reject) {
             request(options, function (error, response, body) {
-                resolve(body.result)
+                resolve(body)
             });
         });
         resultCheck = await promiseCheck.then(function (value) { return value });
@@ -416,7 +420,7 @@ export class BlockchainService {
             });
 
             if (maxBlock.length === 0) {
-                db = 2314600;
+                db = 2646100;
             } else {
                 db = maxBlock[0].blockNumber;
             }
