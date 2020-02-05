@@ -34,6 +34,31 @@ export class Blockchain {
 }
 
 @Entity()
+export class Transaction {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ type: 'varchar', nullable: false })
+  transactionHash: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: false })
+  from: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: false })
+  to: string;
+
+  @Column({ type: 'double', nullable: false })
+  value: number;
+
+  @Column({ type: 'varchar', length: 255, nullable: false })
+  coin_name: string;
+
+  @Column({ type: 'integer', nullable: true })
+  isSuccess: number;
+
+}
+
+@Entity()
 export class Account {
   @PrimaryGeneratedColumn()
   id: number;

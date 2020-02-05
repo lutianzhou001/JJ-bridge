@@ -1,7 +1,7 @@
 import { Injectable, Post, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Blockchain, Account } from '../database/database.entity';
+import { Blockchain, Account, Transaction} from '../database/database.entity';
 const request = require('request');
 // here we can't import web3 into Ts. For more you can refer to "https://github.com/ethereum/web3.js/issues/1597"
 const Web3 = require('web3');
@@ -265,6 +265,8 @@ export class BlockchainService {
         private readonly accountRepository: Repository<Account>,
         @InjectRepository(Blockchain)
         private readonly blockchainRepository: Repository<Blockchain>,
+        @InjectRepository(Transaction)
+        private readonly transactionRepository: Repository<Transaction>,
     ) { }
 
     async attach() {
@@ -287,10 +289,20 @@ export class BlockchainService {
             var resultBalance = await this.getBalance(coin_name, hotWallet.address);
             if (resultBalance > value) {
                 let withdrawResult = await this.transfer(hotWallet.address, address, value, coin_name, hotWallet.ethPrivateKey);
-                if (withdrawResult) {
-                    return {
-                        result: true,
-                        errMessage: null
+                if (withdrawResult.transactionHash) {
+                    //插入转出记录 
+                    const newTransaction = new Transaction();
+                    newTransaction.coin_name = coin_name;
+                    newTransaction.from = hotWallet.address;
+                    newTransaction.to = address;
+                    newTransaction.value = value;
+                    newTransaction.transactionHash = withdrawResult.transactionHash;
+                    const result = await this.transactionRepository.save(newTransaction)
+                    if (result) {
+                        return {
+                            result: true,
+                            errMessage: null
+                        }
                     }
                 }
             } else {
@@ -301,6 +313,8 @@ export class BlockchainService {
             }
         }
     }
+
+    // 新建轮训去查询转账是否成功
 
     async getBalance(coin_name, currentAddress) {
         if (coin_name == 'ETH') {
@@ -430,7 +444,7 @@ export class BlockchainService {
             });
 
             if (maxBlock.length === 0) {
-                db = 2646100;
+                db = 2661000;
             } else {
                 db = maxBlock[0].blockNumber;
             }
