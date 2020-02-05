@@ -249,6 +249,15 @@ const queryTransaction = async (transactionHash) => {
     return transaction
 };
 
+async function coin_name2Address(coin_name) {
+    //IMPLEMENT: 增加coin_NAME向address转换
+}
+
+
+async function address2Coin_name(address) {
+    //IMPLEMENT: 增加address向COIN_NAME转换
+}
+
 @Injectable()
 export class BlockchainService {
     constructor(
@@ -275,10 +284,9 @@ export class BlockchainService {
         Logger.log("Withdraw begins");
         const engineResult = await this.engine(value, id, coin_name);
         if (engineResult) {
-            var resultBalance = await this.getBalance('ETH', hotWallet.address);
+            var resultBalance = await this.getBalance(coin_name, hotWallet.address);
             if (resultBalance > value) {
-                //可用余额充足，可以发送ETH
-                let withdrawResult = await this.transfer(hotWallet.address, address, value, 'ETH', hotWallet.ethPrivateKey);
+                let withdrawResult = await this.transfer(hotWallet.address, address, value, coin_name, hotWallet.ethPrivateKey);
                 if (withdrawResult) {
                     return {
                         result: true,
@@ -303,7 +311,8 @@ export class BlockchainService {
                 from: hotWallet.address,
                 gasPrice: '1000000000'
             })
-            myContract.methods.balanceOf(coin_name).call({from: currentAddress}, function(err,res){
+            let contractAddress = await coin_name2Address(coin_name);
+            myContract.methods.balanceOf(contractAddress).call({from: currentAddress}, function(err,res){
                 if (!err) {
                     Logger.log(res)
                 } else {
@@ -317,11 +326,11 @@ export class BlockchainService {
         var data: any = {}
         data.nonce = await web3.eth.getTransactionCount(from);
         data.from = from;
-        data.to = to;
         data.value = value;
         data.gas = '0x21000';
         data.chainId = '0x22b8'
         if (coin_name == "ETH") {
+            data.to = to;
             data.input = '0x';
             let signedData = await web3.eth.accounts.signTransaction(data, ethPrivateKey);
             if (signedData) {
@@ -337,6 +346,7 @@ export class BlockchainService {
                 }
                 return s+num;
               }
+            data.to = await coin_name2Address(coin_name);
             let subto = to.substr(2);
             data.input = '0x' + 'a9059cbb' + addPreZero(subto) + addPreZero(web3.utils.toHex(value).substr(2)) //T0DO TO是去掉0x的
             let signedData = await web3.eth.signTransaction(data, ethPrivateKey);
@@ -481,7 +491,8 @@ export class BlockchainService {
                                         const checkResult = await this.check(transaction.hash, transaction.from, transaction.to, transaction.value, transaction.input);
                                         if (checkResult === true) {
                                             //TODO 找出该币种，暂时写为USDT
-                                            const engineResult = await this.engine(transaction.value, users[i].id, "USDT")
+                                            let coin_name = await address2Coin_name(transaction.to)
+                                            const engineResult = await this.engine(transaction.value, users[i].id, coin_name)
                                             if (engineResult) {
                                                 const update = await this.blockchainRepository.update(
                                                     result,
