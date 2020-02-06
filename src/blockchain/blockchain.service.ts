@@ -1,14 +1,14 @@
 import { Injectable, Post, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Blockchain, Account, Transaction} from '../database/database.entity';
+import { Blockchain, Account, Transaction } from '../database/database.entity';
+import { hotWallet, coins } from './config'
 const request = require('request');
 // here we can't import web3 into Ts. For more you can refer to "https://github.com/ethereum/web3.js/issues/1597"
 const Web3 = require('web3');
 const abiDecoder = require('abi-decoder');
 const web3 = new Web3(new Web3.providers.HttpProvider('http://119.3.43.136:23130'));
 const endPoint = "https://mainnet.infura.io/v3/b7b3b54135a548e6b52c32fc9b62436a"
-const hotWallet = { address: '0x57Fbf0e343B2F42297b6B52526D5c2e88589A052', ethPrivateKey: 'f869cfe80454e8c14223b778801894d2c3c84d91ed3010a1604bfee59319082c'};
 const abi = [
     {
         'constant': true,
@@ -251,11 +251,21 @@ const queryTransaction = async (transactionHash) => {
 
 async function coin_name2Address(coin_name) {
     //IMPLEMENT: 增加coin_NAME向address转换
+    coins.forEach(element => {
+        if (element.coin_name == coin_name) {
+            return element.contractAddress;
+        }
+    });
 }
 
 
 async function address2Coin_name(address) {
     //IMPLEMENT: 增加address向COIN_NAME转换
+    coins.forEach(element => {
+        if (element.contractAddress == address) {
+            return element.coin_name;
+        }
+    });
 }
 
 @Injectable()
@@ -326,7 +336,7 @@ export class BlockchainService {
                 gasPrice: '1000000000'
             })
             let contractAddress = await coin_name2Address(coin_name);
-            myContract.methods.balanceOf(contractAddress).call({from: currentAddress}, function(err,res){
+            myContract.methods.balanceOf(contractAddress).call({ from: currentAddress }, function (err, res) {
                 if (!err) {
                     Logger.log(res)
                 } else {
@@ -353,13 +363,13 @@ export class BlockchainService {
             }
         } else {
             var addPreZero = (num) => {
-                var t = (num+'').length,
-                s = '';
-                for(var i=0; i<64-t; i++){
-                  s += '0';
+                var t = (num + '').length,
+                    s = '';
+                for (var i = 0; i < 64 - t; i++) {
+                    s += '0';
                 }
-                return s+num;
-              }
+                return s + num;
+            }
             data.to = await coin_name2Address(coin_name);
             let subto = to.substr(2);
             data.input = '0x' + 'a9059cbb' + addPreZero(subto) + addPreZero(web3.utils.toHex(value).substr(2)) //T0DO TO是去掉0x的
