@@ -1,6 +1,6 @@
 import { Injectable, Post, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateDateColumn } from 'typeorm';
 import { Blockchain, Account, Transaction } from '../database/database.entity';
 import { hotWallet, coins } from './config'
 const request = require('request');
@@ -306,6 +306,7 @@ export class BlockchainService {
                     newTransaction.from = hotWallet.address;
                     newTransaction.to = address;
                     newTransaction.value = value;
+                    newTransaction.isSuccess = 0;
                     newTransaction.transactionHash = withdrawResult.transactionHash;
                     const result = await this.transactionRepository.save(newTransaction)
                     if (result) {
@@ -325,6 +326,20 @@ export class BlockchainService {
     }
 
     // 新建轮训去查询转账是否成功
+    async checkTransactionStatus() {
+        const result = await this.transactionRepository.createQueryBuilder().where({ isSuccess : 0 }).getMany();
+        for (let i=0; i<result.length; i++) {
+            let res = await web3.eth.getTransactionReceipt(result[i].transactionHash)
+            if (res.status == true) {
+                const update = await this.transactionRepository.createQueryBuilder().update(Transaction).set({
+                    isSuccess: 1,
+                }).where({ transactionHash: res.transactionHash }).execute();
+                if (update) {
+                    Logger.log("update success")
+                }
+            }
+        }
+    }
 
     async getBalance(coin_name, currentAddress) {
         if (coin_name == 'ETH') {

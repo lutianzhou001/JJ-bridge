@@ -91,6 +91,7 @@ export class AccountService {
         )
         newAccount.id = thisApply[0].id;
         newAccount.ethAddress = thisApply[0].ethAddress;
+        newAccount.btcAddress = thisApply[0].btcAddress;
         pointer = pointer + 1;
         Logger.log("apply success");
         return newAccount;
@@ -112,6 +113,7 @@ export class AccountService {
           )
           newAccount.id = thisApply[0].id;
           newAccount.ethAddress = thisApply[0].ethAddress;
+          newAccount.btcAddress = thisApply[0].btcAddress;
           pointer = pointer + 1;
           Logger.log("apply success");
           return newAccount;
