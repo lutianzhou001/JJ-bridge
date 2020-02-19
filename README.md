@@ -36,6 +36,9 @@
 $ docker-compose build
 $ docker-compose up -d 
 
+if you want to expose this server to public you can choose ngrok
+./ngrok http 80
+
 ```
 
 ## Test
