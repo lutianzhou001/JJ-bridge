@@ -7,7 +7,7 @@ var headers = {
 async function omniCheck(blockNumber){
     var dataString = '{"jsonrpc": "1.0", "id":"curltest", "method": "omni_listblocktransactions", "params": [' + blockNumber + '] }';
     var options = {
-        url: 'http://47.75.138.67:8332/',
+        url: 'http://127.0.0.1:8332/',
         method: 'POST',
         headers: headers,
         body: dataString,
@@ -59,7 +59,7 @@ async function omnigetCurrentBlock(){
 async function omnigetTransaction(transactionHash){
     var dataString = '{"jsonrpc": "1.0", "id":"curltest", "method": "omni_gettransaction", "params": ["'+ transactionHash +'"] }';
     var options = {
-        url: 'http://47.75.138.67:8332/',
+        url: 'http://127.0.0.1:8332/',
         method: 'POST',
         headers: headers,
         body: dataString,
