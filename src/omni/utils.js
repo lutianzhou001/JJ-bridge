@@ -26,7 +26,7 @@ async function omniCheck(blockNumber){
         });
     });
     let resultCheck = await promiseCheck.then(function (value) { return value });
-    return resultCheck
+    return JSON.parse(resultCheck)
 }
 
 async function omnigetCurrentBlock(){
@@ -53,7 +53,7 @@ async function omnigetCurrentBlock(){
         });
     });
     let resultCheck = await promiseCheck.then(function (value) { return value });
-    return resultCheck
+    return JSON.parse(resultCheck);
 }
 
 async function omnigetTransaction(transactionHash){
@@ -77,8 +77,8 @@ async function omnigetTransaction(transactionHash){
             }
         });
     });
-    let resultCheck = await promiseCheck.then(function (value) { return value });
-    return resultCheck;
+    const resultCheck = await promiseCheck.then(function (value) { return value });
+    return JSON.parse(resultCheck);
 }
 
-export {omniCheck,omnigetCurrentBlock,omnigetTransaction}
+export {omniCheck, omnigetCurrentBlock, omnigetTransaction}
