@@ -2,9 +2,10 @@ import { Injectable, Post, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateDateColumn } from 'typeorm';
 import { Omni, Account, Transaction } from '../database/database.entity';
-import { omniCheck, omnigetCurrentBlock, omnigetTransaction } from './utils';
+const omnigetCurrentBlock = require('./utils');
+const omnigetTransaction = require('./utils');
+const omniCheck = require('./utils');
 //import { hotWallet, coins } from './config'
-const request = require('request');
 
 @Injectable()
 export class OmniService {

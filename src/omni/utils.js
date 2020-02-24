@@ -81,4 +81,8 @@ async function omnigetTransaction(transactionHash){
     return JSON.parse(resultCheck);
 }
 
-export {omniCheck, omnigetCurrentBlock, omnigetTransaction}
+module.exports = {
+    omnigetCurrentBlock,
+    omniCheck,
+    omnigetTransaction
+}
