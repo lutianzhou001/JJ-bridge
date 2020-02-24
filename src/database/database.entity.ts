@@ -1,6 +1,40 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
+export class Omni {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ type: 'varchar', nullable: false })
+  txid: string;
+
+  @Column({ type: 'integer', nullable: false })
+  block: number;
+
+  @Column({ type: 'varchar', nullable: false })
+  sendingAddress: string;
+
+  @Column({ type: 'varchar', nullable: false })
+  referenceAddress: string;
+
+  @Column({ type: 'double', nullable: false })
+  amount: number
+
+  @Column({ type: 'integer', nullable: false })
+  propertyId: number
+
+  @Column({ type: 'varchar', nullable: true })
+  type: string;
+
+  @Column({ type: 'integer', nullable: false })
+  isUpdated: number;
+
+  @Column({ type: 'integer', nullable: false })
+  isCollected: number;
+
+}
+
+@Entity()
 export class Blockchain {
   @PrimaryGeneratedColumn()
   id: number;
