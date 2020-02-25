@@ -2,7 +2,7 @@ import { Injectable, Post, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateDateColumn } from 'typeorm';
 import { Omni, Account, Transaction } from '../database/database.entity';
-const utils = require('./utils');
+const utils = require('./utils.js');
 //import { hotWallet, coins } from './config'
 
 @Injectable()
@@ -74,11 +74,13 @@ export class OmniService {
         if (db < ocb.block - 10) {
             for (let i = db + 1; i < ocb.block - 10; i++) {
                 const block = await utils.omniCheck(i);
-                console.log("checking" + i + "block")
+                // tslint:disable-next-line: no-console
+                console.log('checking' + i + 'block')
                 // tslint:disable-next-line: prefer-for-of
                 for (let j = 0; j < block.length; j++) {
                     const transaction = await utils.omnigetTransaction(block[j])
                     const users = await this.findUsers();
+                    // tslint:disable-next-line: prefer-for-of
                     for (let i = 0; i < users.length; i++) {
                         // 这里还需要看下合约地址是否是配置中的ERC20如果不是，则也可以不入库
                         if ((users[i].btcAddress === transaction.result.referenceaddress) && (transaction.result.propertyid == 31)) {
@@ -92,15 +94,16 @@ export class OmniService {
                             newTransaction.isUpdated = 0;
                             const result = await this.omniRepository.save(newTransaction);
                             if (result) {
-                                //const checkResult = await this.check(transaction.hash, transaction.from, transaction.to, transaction.value, transaction.input);
-                                const engineResult = await this.engine(transaction.result.amount, users[i].id, "OMNIUSDT")
+                                // tslint:disable-next-line: max-line-length
+                                // const checkResult = await this.check(transaction.hash, transaction.from, transaction.to, transaction.value, transaction.input);
+                                const engineResult = await this.engine(transaction.result.amount, users[i].id, 'OMNIUSDT')
                                 if (engineResult) {
                                     const update = await this.omniRepository.update(
                                         result,
                                         { isUpdated: 1 },
-                                    )
+                                    );
                                     if (update) {
-                                        Logger.log("update success");
+                                        Logger.log('update success');
                                     }
                                 }
                             }
