@@ -2,8 +2,92 @@ import { Injectable, Post, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateDateColumn } from 'typeorm';
 import { Omni, Account, Transaction } from '../database/database.entity';
-const utils = require('./utils.js');
 //import { hotWallet, coins } from './config'
+
+var request = require('request');
+
+var headers = {
+    'content-type': 'text/plain;'
+};
+
+async function omniCheck(blockNumber){
+    let resultCheck : any = {}
+    var dataString = '{"jsonrpc": "1.0", "id":"curltest", "method": "omni_listblocktransactions", "params": [' + blockNumber + '] }';
+    var options = {
+        url: 'http://127.0.0.1:8332/',
+        method: 'POST',
+        headers: headers,
+        body: dataString,
+        auth: {
+            'user': 'vincent',
+            'pass': '12345678'
+        }
+    };
+
+    var promiseCheck = new Promise(function (resolve, reject) {
+        request(options, function (error, response, body) {
+            console.log(response)
+            if (!error && response.statusCode == 200) {
+                resolve (body);
+            }
+        });
+    });
+    resultCheck = await promiseCheck.then(function (value) { return value });
+    return JSON.parse(resultCheck)
+}
+
+async function omnigetCurrentBlock(){
+    let resultCheck : any = {}
+    var dataString = '{"jsonrpc": "1.0", "id":"curltest", "method": "omni_getcurrentconsensushash", "params": [] }';
+
+    var options = {
+        url: 'http://127.0.0.1:8332/',
+        method: 'POST',
+        headers: headers,
+        body: dataString,
+        auth: {
+            'user': 'vincent',
+            'pass': 'qaz123-QAZ123'
+        }
+    };
+
+    var promiseCheck = new Promise(function (resolve, reject) {
+        request(options, function (error, response, body) {
+            console.log(response)
+            if (!error && response.statusCode == 200) {
+                resolve (body);
+            }
+        });
+    });
+    resultCheck = await promiseCheck.then(function (value) { return value });
+    return JSON.parse(resultCheck);
+}
+
+async function omnigetTransaction(transactionHash){
+    let resultCheck : any = {}
+    var dataString = '{"jsonrpc": "1.0", "id":"curltest", "method": "omni_gettransaction", "params": ["'+ transactionHash +'"] }';
+    var options = {
+        url: 'http://127.0.0.1:8332/',
+        method: 'POST',
+        headers: headers,
+        body: dataString,
+        auth: {
+            'user': 'vincent',
+            'pass': '12345678'
+        }
+    };
+
+    var promiseCheck = new Promise(function (resolve, reject) {
+        request(options, function (error, response, body) {
+            console.log(response)
+            if (!error && response.statusCode == 200) {
+                resolve (body);
+            }
+        });
+    });
+    resultCheck = await promiseCheck.then(function (value) { return value });
+    return JSON.parse(resultCheck);
+}
 
 @Injectable()
 export class OmniService {
@@ -54,11 +138,9 @@ export class OmniService {
     async check(hash, from, to, value, input) {
     }
 
-
-
     async fetch() {
         let db: number;
-        const ocb = await utils.omnigetCurrentBlock();
+        const ocb = await omnigetCurrentBlock();
         const maxBlock = await this.omniRepository.find({
             order: {
                 block: 'DESC',
@@ -73,12 +155,12 @@ export class OmniService {
 
         if (db < ocb.block - 10) {
             for (let i = db + 1; i < ocb.block - 10; i++) {
-                const block = await utils.omniCheck(i);
+                const block = await omniCheck(i);
                 // tslint:disable-next-line: no-console
                 console.log('checking' + i + 'block')
                 // tslint:disable-next-line: prefer-for-of
                 for (let j = 0; j < block.length; j++) {
-                    const transaction = await utils.omnigetTransaction(block[j])
+                    const transaction = await omnigetTransaction(block[j])
                     const users = await this.findUsers();
                     // tslint:disable-next-line: prefer-for-of
                     for (let i = 0; i < users.length; i++) {
