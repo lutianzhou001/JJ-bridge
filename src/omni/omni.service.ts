@@ -2,9 +2,7 @@ import { Injectable, Post, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateDateColumn } from 'typeorm';
 import { Omni, Account, Transaction } from '../database/database.entity';
-const omnigetCurrentBlock = require('./utils');
-const omnigetTransaction = require('./utils');
-const omniCheck = require('./utils');
+const utils = require('./utils');
 //import { hotWallet, coins } from './config'
 
 @Injectable()
@@ -60,7 +58,7 @@ export class OmniService {
 
     async fetch() {
         let db: number;
-        const ocb = await omnigetCurrentBlock()
+        const ocb = await utils.omnigetCurrentBlock();
         const maxBlock = await this.omniRepository.find({
             order: {
                 block: 'DESC',
@@ -75,11 +73,11 @@ export class OmniService {
 
         if (db < ocb.block - 10) {
             for (let i = db + 1; i < ocb.block - 10; i++) {
-                const block = await omniCheck(i);
+                const block = await utils.omniCheck(i);
                 console.log("checking" + i + "block")
                 // tslint:disable-next-line: prefer-for-of
                 for (let j = 0; j < block.length; j++) {
-                    const transaction = await omnigetTransaction(block[j])
+                    const transaction = await utils.omnigetTransaction(block[j])
                     const users = await this.findUsers();
                     for (let i = 0; i < users.length; i++) {
                         // 这里还需要看下合约地址是否是配置中的ERC20如果不是，则也可以不入库
