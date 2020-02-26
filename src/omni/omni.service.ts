@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateDateColumn } from 'typeorm';
 import { Omni, Account, Transaction } from '../database/database.entity';
 //import { hotWallet, coins } from './config'
-var request = require('request');
+import { request } from 'http'
 
 var headers = {
     'content-type': 'text/plain;'
@@ -65,8 +65,6 @@ async function omnigetCurrentBlock(){
     return JSON.parse(resultCheck);
     }
 
-    let ocb = await omnigetCurrentBlock();
-    console.log(ocb)
 
 async function omnigetTransaction(transactionHash){
     let resultCheck : any = {}

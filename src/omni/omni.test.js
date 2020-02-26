@@ -39,7 +39,7 @@ async function omnigetCurrentBlock(){
         body: dataString,
         auth: {
             'user': 'vincent',
-            'pass': '12345678'
+            'pass': 'qaz123-QAZ123'
         }
     };
 
