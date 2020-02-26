@@ -25,6 +25,7 @@
     "@nestjs/core": "^6.7.2",
     "@nestjs/platform-express": "^6.7.2",
     "@nestjs/typeorm": "^6.2.0",
+    "@types/request": "^2.48.4",
     "abi-decoder": "^2.2.2",
     "async-request": "^1.2.0",
     "bigi": "^1.4.2",
