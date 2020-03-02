@@ -3,17 +3,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateDateColumn } from 'typeorm';
 import { Omni, Account, Transaction } from '../database/database.entity';
 //import { hotWallet, coins } from './config'
-import { request } from 'http'
+import request = require('request');
 
 var headers = {
     'content-type': 'text/plain;'
 };
 
-async function omniCheck(blockNumber){
-    let resultCheck : any = {}
-    var dataString = '{"jsonrpc": "1.0", "id":"curltest", "method": "omni_listblocktransactions", "params": [' + blockNumber + '] }';
+async function omnigetCurrentBlock() {
+    console.log("omnigetCurrentBlock")
+    let resultCheck: any = {}
+
+    var dataString = '{"jsonrpc": "1.0", "id":"curltest", "method": "omni_getcurrentconsensushash", "params": [] }';
+
     var options = {
-        url: 'http://127.0.0.1:8332/',
+        url: 'http://172.17.0.1:8080/',
         method: 'POST',
         headers: headers,
         body: dataString,
@@ -25,6 +28,36 @@ async function omniCheck(blockNumber){
 
     var promiseCheck = new Promise(function (resolve, reject) {
         request(options, function (error, response, body) {
+        console.log(response.statusCode)
+            if (!error && response.statusCode == 200) {
+                resolve(body);
+            }
+        });
+    });
+    resultCheck = await promiseCheck.then(function (value) { return value });
+    console.log(resultCheck)
+    return JSON.parse(resultCheck);
+}
+
+
+async function omniCheck(blockNumber){
+    console.log("omnicheck");
+    let resultCheck : any = {}
+    var dataString = '{"jsonrpc": "1.0", "id":"curltest", "method": "omni_listblocktransactions", "params": [' + blockNumber + '] }';
+    var options = {
+        url: 'http://172.17.0.1:8080/',
+        method: 'POST',
+        headers: headers,
+        body: dataString,
+        auth: {
+            'user': 'vincent',
+            'pass': '12345678'
+        }
+    };
+
+    var promiseCheck = new Promise(function (resolve, reject) {
+        request(options, function (error, response, body) {
+        console.log(response.statusCode);
             if (!error && response.statusCode == 200) {
                 resolve (body);
             }
@@ -35,42 +68,11 @@ async function omniCheck(blockNumber){
     return JSON.parse(resultCheck)
 }
 
-async function omnigetCurrentBlock(){
-    let resultCheck : any = {}
-
-    var dataString = '{"jsonrpc": "1.0", "id":"curltest", "method": "omni_getcurrentconsensushash", "params": [] }';
-
-    var options = {
-        url: 'http://127.0.0.1:8332/',
-        method: 'POST',
-        headers: headers,
-        body: dataString,
-        auth: {
-            'user': 'vincent',
-            'pass': '12345678'
-        }
-    };
-
-
-    var promiseCheck = new Promise(function (resolve, reject) {
-        request(options, function (error, response, body) {
-                console.log(response);
-        	if (!error && response.statusCode == 200) {
-                resolve (body);
-            }
-        });
-    });
-    resultCheck = await promiseCheck.then(function (value) { return value });
-    console.log(resultCheck)
-    return JSON.parse(resultCheck);
-    }
-
-
 async function omnigetTransaction(transactionHash){
     let resultCheck : any = {}
     var dataString = '{"jsonrpc": "1.0", "id":"curltest", "method": "omni_gettransaction", "params": ["'+ transactionHash +'"] }';
     var options = {
-        url: 'http://127.0.0.1:8332/',
+        url: 'http://172.17.0.1:8080/',
         method: 'POST',
         headers: headers,
         body: dataString,
@@ -82,15 +84,16 @@ async function omnigetTransaction(transactionHash){
 
     var promiseCheck = new Promise(function (resolve, reject) {
         request(options, function (error, response, body) {
-            console.log(response)
             if (!error && response.statusCode == 200) {
                 resolve (body);
             }
         });
     });
     resultCheck = await promiseCheck.then(function (value) { return value });
+    console.log(resultCheck);
     return JSON.parse(resultCheck);
 }
+
 
 @Injectable()
 export class OmniService {
@@ -157,8 +160,8 @@ export class OmniService {
             db = maxBlock[0].block;
         }
 
-        if (db < ocb.block - 10) {
-            for (let i = db + 1; i < ocb.block - 10; i++) {
+        if (db < ocb.result.block - 10) {
+            for (let i = db + 1; i < ocb.result.block - 10; i++) {
 	        console.log(i)
 	        const block = await omniCheck(i);
                 // tslint:disable-next-line: no-console

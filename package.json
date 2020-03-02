@@ -34,7 +34,7 @@
     "ethereum-input-data-decoder": "^0.3.0",
     "mysql": "^2.17.1",
     "reflect-metadata": "^0.1.13",
-    "request": "^2.88.0",
+    "request": "^2.88.2",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3",
     "typeorm": "^0.2.22",
