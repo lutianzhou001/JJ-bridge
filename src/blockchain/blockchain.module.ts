@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { BlockchainService } from './blockchain.service';
 import { BlockchainController } from './blockchain.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Blockchain,Account,Transaction } from '../database/database.entity';
+import { MongooseModule } from '@nestjs/mongoose';
+import { transactionSchema } from './schemas/transaction.schema';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Blockchain,Account,Transaction])],
+  imports: [MongooseModule.forFeature([{ name: 'Transaction', schema: transactionSchema }])],
   providers: [BlockchainService],
   controllers: [BlockchainController],
 })
-export class BlockchainModule {}
+export class BlockchainModule { }

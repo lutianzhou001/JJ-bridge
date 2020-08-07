@@ -1,30 +1,18 @@
-import { Controller, Get, Post, Delete, Param } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
 import { AccountService } from './account.service';
-import { AccountDto } from './dto/account.dto';
+import { AccountCreateDto } from './dto/account.create.dto';
 
 // 总路由
 @Controller('accounts')
 export class AccountController {
   constructor(private readonly accountService: AccountService) { }
 
-  @Get('myAccount')
-  async findAll() {
-    this.accountService.findAll();
+  @Post('/create')
+  async create(@Body() accountCreateDto: AccountCreateDto) {
+    return this.accountService.create(accountCreateDto);
   }
-
-  // 注册路由
-  @Post('/apply')
-  async apply(): Promise<AccountDto> {
-    return this.accountService.apply();
-  }
-
-  @Post('/generate')
-  async generate() {
-    return this.accountService.generate();
-  }
-
-  @Delete(':id')
-  async delete(@Param() params) {
-    return await this.accountService.destroyAccount(params.id);
-  }
+  // @Delete(':id')
+  // async delete(@Param() params) {
+  //   return await this.accountService.destroyAccount(params.id);
+  // }
 }
