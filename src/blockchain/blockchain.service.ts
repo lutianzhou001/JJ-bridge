@@ -158,6 +158,10 @@ export class BlockchainService {
         await this.fetch();
     }
 
+    async migrate() {
+        
+    }
+
     async fetch() {
         try {
             // tslint:disable-next-line: no-console

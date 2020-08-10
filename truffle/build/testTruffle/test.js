@@ -2,7 +2,8 @@
 const web3 = require("web3")
 const contract = require("truffle-contract")
 var provider = new Web3.providers.HttpProvider("http://localhost:8545");
-const JJToken = contract({
+
+var myContract = new web3.eth.Contract({
   "contractName": "JJToken",
   "abi": [
     {
@@ -2453,7 +2454,12 @@ const JJToken = contract({
   "userdoc": {
     "methods": {}
   }
-})
+}, '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', {
+  from: '0x1234567890123456789012345678901234567891', // default from address
+  gasPrice: '0' // default gas price in wei, 20 gwei in this case
+});
+
+const JJToken = contract()
 JJToken.setProvider(web3.currentProvider)
 JJToken.deployed().then(function (instance) {
   meta = instance

@@ -15,6 +15,7 @@ export class BlockchainController {
 
   @Post('/migrate')
   async migrate() {
+    return this.blockchainService.migrate();
     // return this.blockchainService.migrate();
   }
 
