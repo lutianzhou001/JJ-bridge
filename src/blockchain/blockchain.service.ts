@@ -26,24 +26,6 @@ const queryTransaction = async (transactionHash) => {
     return transaction;
 };
 
-// async function coin_name2Address(coin_name) {
-//     //IMPLEMENT: 增加coin_NAME向address转换
-//     coins.forEach(element => {
-//         if (element.coin_name == coin_name) {
-//             return element.contractAddress;
-//         }
-//     });
-// }
-
-// async function address2Coin_name(address) {
-//     //IMPLEMENT: 增加address向COIN_NAME转换
-//     coins.forEach(element => {
-//         if (element.contractAddress == address) {
-//             return element.coin_name;
-//         }
-//     });
-// }
-
 @Injectable()
 export class BlockchainService {
     constructor(@InjectModel('Transaction') private readonly transactionModel: Model<Transaction>) { }
@@ -159,7 +141,7 @@ export class BlockchainService {
     }
 
     async migrate() {
-        
+
     }
 
     async fetch() {
