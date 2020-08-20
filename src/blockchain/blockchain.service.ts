@@ -1,12 +1,12 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { KeyType, Redis } from 'ioredis';
+import { Redis } from 'ioredis';
 import { InjectModel } from '@nestjs/mongoose';
 import { Transaction } from './interfaces/transaction.interface.dto';
 import { Log } from './interfaces/log.interface.dto';
 import { Order } from './interfaces/order.interface.dto';
 import { Model } from 'mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { default as abis } from './abi';
+import * as Orders from './abi/Orders.json';
 
 // import redis here
 import {
@@ -28,7 +28,7 @@ const Web3 = require('web3');
 const abiDecoder = require('abi-decoder');
 const web3 = new Web3(new Web3.providers.HttpProvider('http://47.75.214.198:8502'));
 
-abiDecoder.addABI(abis.erc20abi);
+abiDecoder.addABI(Orders.abi);
 
 
 const queryCurrentBlock = async () => {
@@ -55,7 +55,7 @@ export class BlockchainService {
         @Inject(REDIS_PUBLISHER_CLIENT) private readonly pubClient: Redis,
     ) { }
 
-    @Cron(CronExpression.EVERY_30_SECONDS)
+    @Cron(CronExpression.EVERY_10_SECONDS)
     async loadDepositTasks() {
         await this.fetch();
     }
@@ -70,11 +70,10 @@ export class BlockchainService {
             const transactionsFromDb = await this.transactionModel.find().exec();
             let maxBlock: number = 0;
             const res = await this.pubClient.get('maxBlock');
-            // console.log(res);
-            if (res) {
+            if (Number(res) > 267223) {
                 maxBlock = Number(res);
             } else {
-                maxBlock = 0;
+                maxBlock = 267223;
             }
             // tslint:disable-next-line:prefer-for-of
             for (let i = maxBlock + 1; i < currentBlock - 10; i++) {
@@ -121,12 +120,13 @@ export class BlockchainService {
                     newLog.transactionHash = transaction.hash;
                     const createdNewLog = new this.logModel(newLog);
                     await createdNewLog.save();
+                    break;
 
                 // 第二种情况下，须要把交易记录下来
                 // 主要分为：1）首次发行Issue 2）购买Coupon 3）交易（转账） 4）提现 5）转账JJToken
 
                 // JJToken的方法
-                case 'jjburn':
+                case 'jjBurn':
                     newTransaction.func = decodedData.name;
                     newTransaction.blockNumber = transaction.blockNumber;
                     newTransaction.contractAddress = transaction.to;
@@ -134,10 +134,11 @@ export class BlockchainService {
                     newTransaction.transactionHash = transaction.hash;
                     newTransaction.burnedAddress = decodedData.params[0].value;
                     newTransaction.burnedAmount = decodedData.params[1].value;
-                    const createdNewTransactionjjburn = new this.transactionModel(newLog);
+                    const createdNewTransactionjjburn = new this.transactionModel(newTransaction);
                     await createdNewTransactionjjburn.save();
+                    break;
 
-                case 'jjmint':
+                case 'jjMint':
                     newTransaction.func = decodedData.name;
                     newTransaction.blockNumber = transaction.blockNumber;
                     newTransaction.contractAddress = transaction.to;
@@ -145,10 +146,11 @@ export class BlockchainService {
                     newTransaction.transactionHash = transaction.hash;
                     newTransaction.mintToAddress = decodedData.params[0].value;
                     newTransaction.mintAmount = decodedData.params[1].value;
-                    const createdNewTransactionjjmint = new this.transactionModel(newLog);
+                    const createdNewTransactionjjmint = new this.transactionModel(newTransaction);
                     await createdNewTransactionjjmint.save();
+                    break;
 
-                case 'jjapproveTo':
+                case 'jjApproveTo':
                     newTransaction.func = decodedData.name;
                     newTransaction.blockNumber = transaction.blockNumber;
                     newTransaction.contractAddress = transaction.to;
@@ -156,10 +158,11 @@ export class BlockchainService {
                     newTransaction.transactionHash = transaction.hash;
                     newTransaction.approvedAddress = decodedData.params[0].value;
                     newTransaction.approvedAmount = decodedData.params[1].value;
-                    const createdNewTransactionjjapproveTo = new this.transactionModel(newLog);
+                    const createdNewTransactionjjapproveTo = new this.transactionModel(newTransaction);
                     await createdNewTransactionjjapproveTo.save();
+                    break;
 
-                case 'jjtransfer':
+                case 'jjTransfer':
                     newTransaction.func = decodedData.name;
                     newTransaction.blockNumber = transaction.blockNumber;
                     newTransaction.contractAddress = transaction.to;
@@ -167,8 +170,9 @@ export class BlockchainService {
                     newTransaction.from = transaction.from;
                     newTransaction.to = decodedData.params[0].value;
                     newTransaction.amount = decodedData.params[1].value;
-                    const createdNewTransactionjjtransfer = new this.transactionModel(newLog);
+                    const createdNewTransactionjjtransfer = new this.transactionModel(newTransaction);
                     await createdNewTransactionjjtransfer.save();
+                    break;
 
                 // coupons的方法
                 case 'withdraw':
@@ -179,8 +183,9 @@ export class BlockchainService {
                     newTransaction.from = transaction.from;
                     newTransaction.tokenAddress = decodedData.params[0].value;
                     newTransaction.withdrawAmount = decodedData.params[1].value;
-                    const createdNewTransactionjjwithdraw = new this.transactionModel(newLog);
+                    const createdNewTransactionjjwithdraw = new this.transactionModel(newTransaction);
                     await createdNewTransactionjjwithdraw.save();
+                    break;
 
                 case 'batchMint':
                     newTransaction.func = decodedData.name;
@@ -191,8 +196,9 @@ export class BlockchainService {
                     newTransaction.tokenAddress = decodedData.params[0].value;
                     newTransaction.staff = decodedData.params[1].value;
                     newTransaction.mintAmount = decodedData.params[2].value;
-                    const createdNewTransactionbatchMint = new this.transactionModel(newLog);
+                    const createdNewTransactionbatchMint = new this.transactionModel(newTransaction);
                     await createdNewTransactionbatchMint.save();
+                    break;
 
                 case 'issue':
                     newTransaction.func = decodedData.name;
@@ -203,8 +209,9 @@ export class BlockchainService {
                     newTransaction.tokenAddress = decodedData.params[0].value;
                     newTransaction.enterpriseAddress = decodedData.params[1].value;
                     newTransaction.issueAmount = decodedData.params[2].value;
-                    const createdNewTransactionissue = new this.transactionModel(newLog);
+                    const createdNewTransactionissue = new this.transactionModel(newTransaction);
                     await createdNewTransactionissue.save();
+                    break;
 
                 case 'mint':
                     newTransaction.func = decodedData.name;
@@ -215,8 +222,9 @@ export class BlockchainService {
                     newTransaction.tokenAddress = decodedData.params[0].value;
                     newTransaction.staff = decodedData.params[1].value;
                     newTransaction.mintAmount = decodedData.params[2].value;
-                    const createdNewTransactionmint = new this.transactionModel(newLog);
+                    const createdNewTransactionmint = new this.transactionModel(newTransaction);
                     await createdNewTransactionmint.save();
+                    break;
 
                 case 'burn':
                     newTransaction.func = decodedData.name;
@@ -226,8 +234,9 @@ export class BlockchainService {
                     newTransaction.from = transaction.from;
                     newTransaction.burnedAddress = decodedData.params[0].value;
                     newTransaction.burnedAmount = decodedData.params[1].value;
-                    const createdNewTransactionburn = new this.transactionModel(newLog);
+                    const createdNewTransactionburn = new this.transactionModel(newTransaction);
                     await createdNewTransactionburn.save();
+                    break;
 
                 case 'transfer':
                     newTransaction.blockNumber = transaction.blockNumber;
@@ -236,8 +245,9 @@ export class BlockchainService {
                     newTransaction.from = transaction.from;
                     newTransaction.to = decodedData.params[0].value;
                     newTransaction.amount = decodedData.params[1].value;
-                    const createdNewTransactiontransfer = new this.transactionModel(newLog);
+                    const createdNewTransactiontransfer = new this.transactionModel(newTransaction);
                     await createdNewTransactiontransfer.save();
+                    break;
 
                 case 'refund':
                     newTransaction.func = decodedData.name;
@@ -247,8 +257,9 @@ export class BlockchainService {
                     newTransaction.from = transaction.from;
                     newTransaction.to = decodedData.params[0].value;
                     newTransaction.amount = decodedData.params[1].value;
-                    const createdNewTransactionrefund = new this.transactionModel(newLog);
+                    const createdNewTransactionrefund = new this.transactionModel(newTransaction);
                     await createdNewTransactionrefund.save();
+                    break;
 
                 // 第三种情况 order记录：纯记录
                 case 'appendOrder':
@@ -259,8 +270,9 @@ export class BlockchainService {
                     newOrder.from = transaction.from;
                     newOrder.orderId = decodedData.params[0].value;
                     newOrder.orderContent = decodedData.params[1].value;
-                    const createdNewOrderAppendOrder = new this.orderModel(newLog);
+                    const createdNewOrderAppendOrder = new this.orderModel(newOrder);
                     await createdNewOrderAppendOrder.save();
+                    break;
 
                 case 'deleteOrder':
                     newOrder.func = decodedData.name;
@@ -270,8 +282,9 @@ export class BlockchainService {
                     newOrder.from = transaction.from;
                     newOrder.orderId = decodedData.params[0].value;
                     newOrder.orderContent = decodedData.params[1].value;
-                    const createdNewOrderDeleteOrder = new this.orderModel(newLog);
+                    const createdNewOrderDeleteOrder = new this.orderModel(newOrder);
                     await createdNewOrderDeleteOrder.save();
+                    break;
 
                 case 'appendOrderDetail':
                     newOrder.func = decodedData.name;
@@ -281,8 +294,9 @@ export class BlockchainService {
                     newOrder.from = transaction.from;
                     newOrder.orderDetailId = decodedData.params[0].value;
                     newOrder.orderDetailContent = decodedData.params[1].value;
-                    const createdNewOrderAppendOrderDetail = new this.orderModel(newLog);
+                    const createdNewOrderAppendOrderDetail = new this.orderModel(newOrder);
                     await createdNewOrderAppendOrderDetail.save();
+                    break;
 
                 case 'deleteOrderDetail':
                     newOrder.func = decodedData.name;
@@ -292,8 +306,9 @@ export class BlockchainService {
                     newOrder.from = transaction.from;
                     newOrder.orderDetailId = decodedData.params[0].value;
                     newOrder.orderDetailContent = decodedData.params[1].value;
-                    const createdNewOrderDeleteOrderDetail = new this.orderModel(newLog);
+                    const createdNewOrderDeleteOrderDetail = new this.orderModel(newOrder);
                     await createdNewOrderDeleteOrderDetail.save();
+                    break;
             }
         }
     }

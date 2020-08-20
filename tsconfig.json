@@ -12,6 +12,7 @@
     "incremental": true,
     "noImplicitAny": false,
     "esModuleInterop": true,
+    "resolveJsonModule": true,
   },
   "exclude": ["node_modules", "dist"]
 }
