@@ -266,7 +266,7 @@
         "id": 1326,
         "nodeType": "ImportDirective",
         "scope": 1607,
-        "sourceUnit": 15821,
+        "sourceUnit": 15820,
         "src": "58:36:7",
         "symbolAliases": [],
         "unitAlias": ""
@@ -277,7 +277,7 @@
         "id": 1327,
         "nodeType": "ImportDirective",
         "scope": 1607,
-        "sourceUnit": 14728,
+        "sourceUnit": 14727,
         "src": "95:30:7",
         "symbolAliases": [],
         "unitAlias": ""
@@ -341,10 +341,10 @@
               "id": 1332,
               "name": "EnumerableSet",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 15820,
+              "referencedDeclaration": 15819,
               "src": "1488:13:7",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_EnumerableSet_$15820",
+                "typeIdentifier": "t_contract$_EnumerableSet_$15819",
                 "typeString": "library EnumerableSet"
               }
             },
@@ -355,10 +355,10 @@
               "id": 1333,
               "name": "EnumerableSet.AddressSet",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 15616,
+              "referencedDeclaration": 15615,
               "src": "1506:24:7",
               "typeDescriptions": {
-                "typeIdentifier": "t_struct$_AddressSet_$15616_storage_ptr",
+                "typeIdentifier": "t_struct$_AddressSet_$15615_storage_ptr",
                 "typeString": "struct EnumerableSet.AddressSet"
               }
             }
@@ -370,10 +370,10 @@
               "id": 1335,
               "name": "Address",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 14727,
+              "referencedDeclaration": 14726,
               "src": "1542:7:7",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Address_$14727",
+                "typeIdentifier": "t_contract$_Address_$14726",
                 "typeString": "library Address"
               }
             },
@@ -407,7 +407,7 @@
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_AddressSet_$15616_storage_ptr",
+                  "typeIdentifier": "t_struct$_AddressSet_$15615_storage_ptr",
                   "typeString": "struct EnumerableSet.AddressSet"
                 },
                 "typeName": {
@@ -415,10 +415,10 @@
                   "id": 1338,
                   "name": "EnumerableSet.AddressSet",
                   "nodeType": "UserDefinedTypeName",
-                  "referencedDeclaration": 15616,
+                  "referencedDeclaration": 15615,
                   "src": "1594:24:7",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_AddressSet_$15616_storage_ptr",
+                    "typeIdentifier": "t_struct$_AddressSet_$15615_storage_ptr",
                     "typeString": "struct EnumerableSet.AddressSet"
                   }
                 },
@@ -963,7 +963,7 @@
                         "referencedDeclaration": 1339,
                         "src": "3032:20:7",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_AddressSet_$15616_storage",
+                          "typeIdentifier": "t_struct$_AddressSet_$15615_storage",
                           "typeString": "struct EnumerableSet.AddressSet storage ref"
                         }
                       },
@@ -974,10 +974,10 @@
                       "lValueRequested": false,
                       "memberName": "contains",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 15685,
+                      "referencedDeclaration": 15684,
                       "src": "3032:29:7",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_view$_t_struct$_AddressSet_$15616_storage_ptr_$_t_address_$returns$_t_bool_$bound_to$_t_struct$_AddressSet_$15616_storage_ptr_$",
+                        "typeIdentifier": "t_function_internal_view$_t_struct$_AddressSet_$15615_storage_ptr_$_t_address_$returns$_t_bool_$bound_to$_t_struct$_AddressSet_$15615_storage_ptr_$",
                         "typeString": "function (struct EnumerableSet.AddressSet storage pointer,address) view returns (bool)"
                       }
                     },
@@ -1186,7 +1186,7 @@
                         "referencedDeclaration": 1339,
                         "src": "3334:20:7",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_AddressSet_$15616_storage",
+                          "typeIdentifier": "t_struct$_AddressSet_$15615_storage",
                           "typeString": "struct EnumerableSet.AddressSet storage ref"
                         }
                       },
@@ -1197,10 +1197,10 @@
                       "lValueRequested": false,
                       "memberName": "length",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 15699,
+                      "referencedDeclaration": 15698,
                       "src": "3334:27:7",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_view$_t_struct$_AddressSet_$15616_storage_ptr_$returns$_t_uint256_$bound_to$_t_struct$_AddressSet_$15616_storage_ptr_$",
+                        "typeIdentifier": "t_function_internal_view$_t_struct$_AddressSet_$15615_storage_ptr_$returns$_t_uint256_$bound_to$_t_struct$_AddressSet_$15615_storage_ptr_$",
                         "typeString": "function (struct EnumerableSet.AddressSet storage pointer) view returns (uint256)"
                       }
                     },
@@ -1399,7 +1399,7 @@
                         "referencedDeclaration": 1339,
                         "src": "4054:20:7",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_AddressSet_$15616_storage",
+                          "typeIdentifier": "t_struct$_AddressSet_$15615_storage",
                           "typeString": "struct EnumerableSet.AddressSet storage ref"
                         }
                       },
@@ -1410,10 +1410,10 @@
                       "lValueRequested": false,
                       "memberName": "at",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 15722,
+                      "referencedDeclaration": 15721,
                       "src": "4054:23:7",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_view$_t_struct$_AddressSet_$15616_storage_ptr_$_t_uint256_$returns$_t_address_$bound_to$_t_struct$_AddressSet_$15616_storage_ptr_$",
+                        "typeIdentifier": "t_function_internal_view$_t_struct$_AddressSet_$15615_storage_ptr_$_t_uint256_$returns$_t_address_$bound_to$_t_struct$_AddressSet_$15615_storage_ptr_$",
                         "typeString": "function (struct EnumerableSet.AddressSet storage pointer,uint256) view returns (address)"
                       }
                     },
@@ -3317,7 +3317,7 @@
                         "referencedDeclaration": 1339,
                         "src": "7088:20:7",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_AddressSet_$15616_storage",
+                          "typeIdentifier": "t_struct$_AddressSet_$15615_storage",
                           "typeString": "struct EnumerableSet.AddressSet storage ref"
                         }
                       },
@@ -3328,10 +3328,10 @@
                       "lValueRequested": false,
                       "memberName": "add",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 15639,
+                      "referencedDeclaration": 15638,
                       "src": "7088:24:7",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_AddressSet_$15616_storage_ptr_$_t_address_$returns$_t_bool_$bound_to$_t_struct$_AddressSet_$15616_storage_ptr_$",
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_AddressSet_$15615_storage_ptr_$_t_address_$returns$_t_bool_$bound_to$_t_struct$_AddressSet_$15615_storage_ptr_$",
                         "typeString": "function (struct EnumerableSet.AddressSet storage pointer,address) returns (bool)"
                       }
                     },
@@ -3638,7 +3638,7 @@
                         "referencedDeclaration": 1339,
                         "src": "7279:20:7",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_AddressSet_$15616_storage",
+                          "typeIdentifier": "t_struct$_AddressSet_$15615_storage",
                           "typeString": "struct EnumerableSet.AddressSet storage ref"
                         }
                       },
@@ -3649,10 +3649,10 @@
                       "lValueRequested": false,
                       "memberName": "remove",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 15662,
+                      "referencedDeclaration": 15661,
                       "src": "7279:27:7",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_AddressSet_$15616_storage_ptr_$_t_address_$returns$_t_bool_$bound_to$_t_struct$_AddressSet_$15616_storage_ptr_$",
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_AddressSet_$15615_storage_ptr_$_t_address_$returns$_t_bool_$bound_to$_t_struct$_AddressSet_$15615_storage_ptr_$",
                         "typeString": "function (struct EnumerableSet.AddressSet storage pointer,address) returns (bool)"
                       }
                     },
@@ -3911,7 +3911,7 @@
         "id": 1326,
         "nodeType": "ImportDirective",
         "scope": 1607,
-        "sourceUnit": 15821,
+        "sourceUnit": 15820,
         "src": "58:36:7",
         "symbolAliases": [],
         "unitAlias": ""
@@ -3922,7 +3922,7 @@
         "id": 1327,
         "nodeType": "ImportDirective",
         "scope": 1607,
-        "sourceUnit": 14728,
+        "sourceUnit": 14727,
         "src": "95:30:7",
         "symbolAliases": [],
         "unitAlias": ""
@@ -3986,10 +3986,10 @@
               "id": 1332,
               "name": "EnumerableSet",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 15820,
+              "referencedDeclaration": 15819,
               "src": "1488:13:7",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_EnumerableSet_$15820",
+                "typeIdentifier": "t_contract$_EnumerableSet_$15819",
                 "typeString": "library EnumerableSet"
               }
             },
@@ -4000,10 +4000,10 @@
               "id": 1333,
               "name": "EnumerableSet.AddressSet",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 15616,
+              "referencedDeclaration": 15615,
               "src": "1506:24:7",
               "typeDescriptions": {
-                "typeIdentifier": "t_struct$_AddressSet_$15616_storage_ptr",
+                "typeIdentifier": "t_struct$_AddressSet_$15615_storage_ptr",
                 "typeString": "struct EnumerableSet.AddressSet"
               }
             }
@@ -4015,10 +4015,10 @@
               "id": 1335,
               "name": "Address",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 14727,
+              "referencedDeclaration": 14726,
               "src": "1542:7:7",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Address_$14727",
+                "typeIdentifier": "t_contract$_Address_$14726",
                 "typeString": "library Address"
               }
             },
@@ -4052,7 +4052,7 @@
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_AddressSet_$15616_storage_ptr",
+                  "typeIdentifier": "t_struct$_AddressSet_$15615_storage_ptr",
                   "typeString": "struct EnumerableSet.AddressSet"
                 },
                 "typeName": {
@@ -4060,10 +4060,10 @@
                   "id": 1338,
                   "name": "EnumerableSet.AddressSet",
                   "nodeType": "UserDefinedTypeName",
-                  "referencedDeclaration": 15616,
+                  "referencedDeclaration": 15615,
                   "src": "1594:24:7",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_AddressSet_$15616_storage_ptr",
+                    "typeIdentifier": "t_struct$_AddressSet_$15615_storage_ptr",
                     "typeString": "struct EnumerableSet.AddressSet"
                   }
                 },
@@ -4608,7 +4608,7 @@
                         "referencedDeclaration": 1339,
                         "src": "3032:20:7",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_AddressSet_$15616_storage",
+                          "typeIdentifier": "t_struct$_AddressSet_$15615_storage",
                           "typeString": "struct EnumerableSet.AddressSet storage ref"
                         }
                       },
@@ -4619,10 +4619,10 @@
                       "lValueRequested": false,
                       "memberName": "contains",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 15685,
+                      "referencedDeclaration": 15684,
                       "src": "3032:29:7",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_view$_t_struct$_AddressSet_$15616_storage_ptr_$_t_address_$returns$_t_bool_$bound_to$_t_struct$_AddressSet_$15616_storage_ptr_$",
+                        "typeIdentifier": "t_function_internal_view$_t_struct$_AddressSet_$15615_storage_ptr_$_t_address_$returns$_t_bool_$bound_to$_t_struct$_AddressSet_$15615_storage_ptr_$",
                         "typeString": "function (struct EnumerableSet.AddressSet storage pointer,address) view returns (bool)"
                       }
                     },
@@ -4831,7 +4831,7 @@
                         "referencedDeclaration": 1339,
                         "src": "3334:20:7",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_AddressSet_$15616_storage",
+                          "typeIdentifier": "t_struct$_AddressSet_$15615_storage",
                           "typeString": "struct EnumerableSet.AddressSet storage ref"
                         }
                       },
@@ -4842,10 +4842,10 @@
                       "lValueRequested": false,
                       "memberName": "length",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 15699,
+                      "referencedDeclaration": 15698,
                       "src": "3334:27:7",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_view$_t_struct$_AddressSet_$15616_storage_ptr_$returns$_t_uint256_$bound_to$_t_struct$_AddressSet_$15616_storage_ptr_$",
+                        "typeIdentifier": "t_function_internal_view$_t_struct$_AddressSet_$15615_storage_ptr_$returns$_t_uint256_$bound_to$_t_struct$_AddressSet_$15615_storage_ptr_$",
                         "typeString": "function (struct EnumerableSet.AddressSet storage pointer) view returns (uint256)"
                       }
                     },
@@ -5044,7 +5044,7 @@
                         "referencedDeclaration": 1339,
                         "src": "4054:20:7",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_AddressSet_$15616_storage",
+                          "typeIdentifier": "t_struct$_AddressSet_$15615_storage",
                           "typeString": "struct EnumerableSet.AddressSet storage ref"
                         }
                       },
@@ -5055,10 +5055,10 @@
                       "lValueRequested": false,
                       "memberName": "at",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 15722,
+                      "referencedDeclaration": 15721,
                       "src": "4054:23:7",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_view$_t_struct$_AddressSet_$15616_storage_ptr_$_t_uint256_$returns$_t_address_$bound_to$_t_struct$_AddressSet_$15616_storage_ptr_$",
+                        "typeIdentifier": "t_function_internal_view$_t_struct$_AddressSet_$15615_storage_ptr_$_t_uint256_$returns$_t_address_$bound_to$_t_struct$_AddressSet_$15615_storage_ptr_$",
                         "typeString": "function (struct EnumerableSet.AddressSet storage pointer,uint256) view returns (address)"
                       }
                     },
@@ -6962,7 +6962,7 @@
                         "referencedDeclaration": 1339,
                         "src": "7088:20:7",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_AddressSet_$15616_storage",
+                          "typeIdentifier": "t_struct$_AddressSet_$15615_storage",
                           "typeString": "struct EnumerableSet.AddressSet storage ref"
                         }
                       },
@@ -6973,10 +6973,10 @@
                       "lValueRequested": false,
                       "memberName": "add",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 15639,
+                      "referencedDeclaration": 15638,
                       "src": "7088:24:7",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_AddressSet_$15616_storage_ptr_$_t_address_$returns$_t_bool_$bound_to$_t_struct$_AddressSet_$15616_storage_ptr_$",
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_AddressSet_$15615_storage_ptr_$_t_address_$returns$_t_bool_$bound_to$_t_struct$_AddressSet_$15615_storage_ptr_$",
                         "typeString": "function (struct EnumerableSet.AddressSet storage pointer,address) returns (bool)"
                       }
                     },
@@ -7283,7 +7283,7 @@
                         "referencedDeclaration": 1339,
                         "src": "7279:20:7",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_AddressSet_$15616_storage",
+                          "typeIdentifier": "t_struct$_AddressSet_$15615_storage",
                           "typeString": "struct EnumerableSet.AddressSet storage ref"
                         }
                       },
@@ -7294,10 +7294,10 @@
                       "lValueRequested": false,
                       "memberName": "remove",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 15662,
+                      "referencedDeclaration": 15661,
                       "src": "7279:27:7",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_AddressSet_$15616_storage_ptr_$_t_address_$returns$_t_bool_$bound_to$_t_struct$_AddressSet_$15616_storage_ptr_$",
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_AddressSet_$15615_storage_ptr_$_t_address_$returns$_t_bool_$bound_to$_t_struct$_AddressSet_$15615_storage_ptr_$",
                         "typeString": "function (struct EnumerableSet.AddressSet storage pointer,address) returns (bool)"
                       }
                     },
@@ -7534,7 +7534,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-08-20T03:21:16.005Z",
+  "updatedAt": "2020-08-20T12:42:13.924Z",
   "devdoc": {
     "details": "Contract module that allows children to implement role-based access control mechanisms. Roles are referred to by their `bytes32` identifier. These should be exposed in the external API and be unique. The best way to achieve this is by using `public constant` hash digests: ``` bytes32 public constant MY_ROLE = keccak256(\"MY_ROLE\"); ``` Roles can be used to represent a set of permissions. To restrict access to a function call, use {hasRole}: ``` function foo() public {     require(hasRole(MY_ROLE, msg.sender));     ... } ``` Roles can be granted and revoked dynamically via the {grantRole} and {revokeRole} functions. Each role has an associated admin role, and only accounts that have a role's admin role can call {grantRole} and {revokeRole}. By default, the admin role for all roles is `DEFAULT_ADMIN_ROLE`, which means that only accounts with this role will be able to grant or revoke other roles. More complex role relationships can be created by using {_setRoleAdmin}. WARNING: The `DEFAULT_ADMIN_ROLE` is also its own admin: it has permission to grant and revoke this role. Extra precautions should be taken to secure accounts that have been granted it.",
     "methods": {

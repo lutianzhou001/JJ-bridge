@@ -905,7 +905,7 @@
           9905,
           10055,
           10070,
-          15910
+          15909
         ],
         "contractKind": "contract",
         "documentation": {
@@ -919,7 +919,7 @@
         "linearizedBaseContracts": [
           8427,
           9905,
-          15910,
+          15909,
           9806,
           9737,
           10070,
@@ -2482,7 +2482,7 @@
                       "name": "_pause",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 15893,
+                      "referencedDeclaration": 15892,
                       "src": "2610:6:78",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$__$returns$__$",
@@ -2710,7 +2710,7 @@
                       "name": "_unpause",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 15909,
+                      "referencedDeclaration": 15908,
                       "src": "2994:8:78",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$__$returns$__$",
@@ -3356,7 +3356,7 @@
           9905,
           10055,
           10070,
-          15910
+          15909
         ],
         "contractKind": "contract",
         "documentation": {
@@ -3370,7 +3370,7 @@
         "linearizedBaseContracts": [
           8427,
           9905,
-          15910,
+          15909,
           9806,
           9737,
           10070,
@@ -4933,7 +4933,7 @@
                       "name": "_pause",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 15893,
+                      "referencedDeclaration": 15892,
                       "src": "2610:6:78",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$__$returns$__$",
@@ -5161,7 +5161,7 @@
                       "name": "_unpause",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 15909,
+                      "referencedDeclaration": 15908,
                       "src": "2994:8:78",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$__$returns$__$",
@@ -5650,7 +5650,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-08-20T03:21:17.499Z",
+  "updatedAt": "2020-08-20T12:42:13.964Z",
   "devdoc": {
     "details": "{ERC1155} token, including:  - ability for holders to burn (destroy) their tokens  - a minter role that allows for token minting (creation)  - a pauser role that allows to stop all token transfers This contract uses {AccessControl} to lock permissioned functions using the different roles - head to its documentation for details. The account that deploys the contract will be granted the minter and pauser roles, as well as the default admin role, which will let it grant both minter and pauser roles to other accounts.",
     "methods": {

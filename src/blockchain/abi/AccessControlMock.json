@@ -999,7 +999,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-08-20T03:21:17.235Z",
+  "updatedAt": "2020-08-20T12:42:13.954Z",
   "devdoc": {
     "methods": {
       "getRoleAdmin(bytes32)": {
