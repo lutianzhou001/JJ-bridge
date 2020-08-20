@@ -1,7 +1,5 @@
 import { Controller, Get, Post, Delete, Param } from '@nestjs/common';
 import { BlockchainService } from './blockchain.service';
-import { MigrationExecutor } from 'typeorm';
-
 // 总路由
 @Controller('blockchain')
 export class BlockchainController {

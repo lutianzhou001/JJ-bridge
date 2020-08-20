@@ -9,11 +9,19 @@ import { default as config } from './config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ContractModule } from './contract/contract.module';
 
+
 const userString = config.db.user && config.db.pass ? (config.db.user + ':' + config.db.pass + '@') : '';
 const authSource = config.db.authSource ? ('?authSource=' + config.db.authSource + '&w=1') : '';
 
 @Module({
-  imports: [ScheduleModule.forRoot(), MongooseModule.forRoot('mongodb://' + userString + config.db.host + ':' + (config.db.port || '27017') + '/' + config.db.database + authSource), AccountModule, BlockchainModule, ContractModule],
+  // tslint:disable-next-line: max-line-length
+  imports: [
+    ScheduleModule.forRoot(),
+    MongooseModule.forRoot('mongodb://' + userString + config.db.host + ':' + (config.db.port || '27017') + '/' + config.db.database + authSource),
+    AccountModule,
+    BlockchainModule,
+    ContractModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

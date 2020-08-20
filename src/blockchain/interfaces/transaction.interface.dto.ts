@@ -8,4 +8,14 @@ export interface Transaction extends Document {
     to: string;
     createdTime: number;
     contractAddress: string;
+    func: string;
+    burnedAddress: string;
+    burnedAmount: string;
+    mintToAddress: string;
+    mintAmount: number;
+    approvedAddress: string;
+    approvedAmount: number;
+    tokenAddress: string;
+    withdrawAmount: number;
+    staff: string;
 }

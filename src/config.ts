@@ -7,4 +7,10 @@ export default {
         database: 'testdb',
         authSource: null,
     },
+
+    redisSettings: {
+        host: 'localhost',
+        port: 6379,
+        password: 'password',
+    }
 };
