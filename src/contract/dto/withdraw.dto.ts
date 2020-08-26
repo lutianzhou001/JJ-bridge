@@ -1,10 +1,9 @@
 import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class DeleteStoreDto {
+export class WithdrawDto {
 
-    @ApiProperty({ name: "商家Id" })
+    @ApiProperty({ name: "提现数量" })
     @IsString()
-    readonly storeId: string;
-
+    readonly amount: number;
 }
