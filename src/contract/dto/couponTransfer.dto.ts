@@ -2,6 +2,9 @@ import { IsString, IsArray } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CouponTransferDto {
+    @ApiProperty({ description: 'email' })
+    @IsString()
+    readonly email: string;
 
     @ApiProperty({ name: "转入地址" })
     @IsString()

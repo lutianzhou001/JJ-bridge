@@ -3,7 +3,11 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class WithdrawDto {
 
-    @ApiProperty({ name: "提现数量" })
+    @ApiProperty({ description: 'email' })
+    @IsString()
+    readonly email: string;
+
+    @ApiProperty({ name: '提现数量' })
     @IsString()
     readonly amount: number;
 }

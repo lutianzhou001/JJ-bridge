@@ -3,6 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class MintJJTokenDto {
 
+    @ApiProperty({ name: 'email' })
+    @IsString()
+    readonly email: string;
+
     @ApiProperty({ name: "发行地址" })
     @IsString()
     readonly address: string;

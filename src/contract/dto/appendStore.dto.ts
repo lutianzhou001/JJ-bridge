@@ -3,6 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class AppendStoreDto {
 
+    @ApiProperty({ description: 'email' })
+    @IsString()
+    readonly email: string;
+
     @ApiProperty({ description: "商家Id" })
     @IsString()
     readonly storeId: string;

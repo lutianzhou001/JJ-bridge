@@ -3,6 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class BurnCouponsDto {
 
+    @ApiProperty({ description: 'email' })
+    @IsString()
+    readonly email: string;
+
     @ApiProperty({ name: "销毁地址" })
     @IsString()
     readonly address: string;

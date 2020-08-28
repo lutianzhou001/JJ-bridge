@@ -1,0 +1,497 @@
+{
+  "contractName": "Config",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.10+commit.00c0fcaf\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/lu/Desktop/ningbojj/JJToken/contracts/config/Config.sol\":\"Config\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/lu/Desktop/ningbojj/JJToken/contracts/config/Config.sol\":{\"keccak256\":\"0x89b97a061db8d1c10256d70ad8ed6609c7e1bbe9af4e8ca00a2e0b8234f39e63\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4c2a7fc3c387554be25867f22ada96b8e6382300c5cf8ef43e71945f92e23f85\",\"dweb:/ipfs/QmdrPvHFF1DuhtSYznehEDaJy6YgvhLE6ct1zRRsmGXNLG\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220b314a54b8aa2bb9c9597e5259ac73450bf31fc82b60906f021a887c02643158464736f6c634300060a0033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220b314a54b8aa2bb9c9597e5259ac73450bf31fc82b60906f021a887c02643158464736f6c634300060a0033",
+  "immutableReferences": {},
+  "sourceMap": "93:371:11:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "93:371:11:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.6.10;\npragma experimental ABIEncoderV2;\n\n\ncontract Config {\n    \n        address constant RolesAddress = 0xC8e1E64287c60c8256ed6DeD0d5860CEBD916843;\n        address constant OrdersAddress = 0x22e7Dd9B7C2708dE833b880EF9804D3E31689Fa6;\n        address constant OrderDetailsAddress = 0x22e7Dd9B7C2708dE833b880EF9804D3E31689Fa6;\n        address constant JJTokenAddress = 0xbCff0801bffC7E687D99Cc224002cbE4CAbc523C; \n}\n\n",
+  "sourcePath": "/Users/lu/Desktop/ningbojj/JJToken/contracts/config/Config.sol",
+  "ast": {
+    "absolutePath": "/Users/lu/Desktop/ningbojj/JJToken/contracts/config/Config.sol",
+    "exportedSymbols": {
+      "Config": [
+        2690
+      ]
+    },
+    "id": 2691,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2676,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".10"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:24:11"
+      },
+      {
+        "id": 2677,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "57:33:11"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 2690,
+        "linearizedBaseContracts": [
+          2690
+        ],
+        "name": "Config",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": true,
+            "id": 2680,
+            "mutability": "constant",
+            "name": "RolesAddress",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 2690,
+            "src": "124:74:11",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 2678,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "124:7:11",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "307843386531453634323837633630633832353665643644654430643538363043454244393136383433",
+              "id": 2679,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "156:42:11",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_address_payable",
+                "typeString": "address payable"
+              },
+              "value": "0xC8e1E64287c60c8256ed6DeD0d5860CEBD916843"
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": true,
+            "id": 2683,
+            "mutability": "constant",
+            "name": "OrdersAddress",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 2690,
+            "src": "208:75:11",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 2681,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "208:7:11",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "307832326537446439423743323730386445383333623838304546393830344433453331363839466136",
+              "id": 2682,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "241:42:11",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_address_payable",
+                "typeString": "address payable"
+              },
+              "value": "0x22e7Dd9B7C2708dE833b880EF9804D3E31689Fa6"
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": true,
+            "id": 2686,
+            "mutability": "constant",
+            "name": "OrderDetailsAddress",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 2690,
+            "src": "293:81:11",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 2684,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "293:7:11",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "307832326537446439423743323730386445383333623838304546393830344433453331363839466136",
+              "id": 2685,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "332:42:11",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_address_payable",
+                "typeString": "address payable"
+              },
+              "value": "0x22e7Dd9B7C2708dE833b880EF9804D3E31689Fa6"
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": true,
+            "id": 2689,
+            "mutability": "constant",
+            "name": "JJTokenAddress",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 2690,
+            "src": "384:76:11",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 2687,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "384:7:11",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "307862436666303830316266664337453638374439394363323234303032636245344341626335323343",
+              "id": 2688,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "418:42:11",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_address_payable",
+                "typeString": "address payable"
+              },
+              "value": "0xbCff0801bffC7E687D99Cc224002cbE4CAbc523C"
+            },
+            "visibility": "internal"
+          }
+        ],
+        "scope": 2691,
+        "src": "93:371:11"
+      }
+    ],
+    "src": "32:434:11"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/lu/Desktop/ningbojj/JJToken/contracts/config/Config.sol",
+    "exportedSymbols": {
+      "Config": [
+        2690
+      ]
+    },
+    "id": 2691,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2676,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".10"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:24:11"
+      },
+      {
+        "id": 2677,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "57:33:11"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 2690,
+        "linearizedBaseContracts": [
+          2690
+        ],
+        "name": "Config",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": true,
+            "id": 2680,
+            "mutability": "constant",
+            "name": "RolesAddress",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 2690,
+            "src": "124:74:11",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 2678,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "124:7:11",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "307843386531453634323837633630633832353665643644654430643538363043454244393136383433",
+              "id": 2679,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "156:42:11",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_address_payable",
+                "typeString": "address payable"
+              },
+              "value": "0xC8e1E64287c60c8256ed6DeD0d5860CEBD916843"
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": true,
+            "id": 2683,
+            "mutability": "constant",
+            "name": "OrdersAddress",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 2690,
+            "src": "208:75:11",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 2681,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "208:7:11",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "307832326537446439423743323730386445383333623838304546393830344433453331363839466136",
+              "id": 2682,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "241:42:11",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_address_payable",
+                "typeString": "address payable"
+              },
+              "value": "0x22e7Dd9B7C2708dE833b880EF9804D3E31689Fa6"
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": true,
+            "id": 2686,
+            "mutability": "constant",
+            "name": "OrderDetailsAddress",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 2690,
+            "src": "293:81:11",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 2684,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "293:7:11",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "307832326537446439423743323730386445383333623838304546393830344433453331363839466136",
+              "id": 2685,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "332:42:11",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_address_payable",
+                "typeString": "address payable"
+              },
+              "value": "0x22e7Dd9B7C2708dE833b880EF9804D3E31689Fa6"
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": true,
+            "id": 2689,
+            "mutability": "constant",
+            "name": "JJTokenAddress",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 2690,
+            "src": "384:76:11",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 2687,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "384:7:11",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "307862436666303830316266664337453638374439394363323234303032636245344341626335323343",
+              "id": 2688,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "418:42:11",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_address_payable",
+                "typeString": "address payable"
+              },
+              "value": "0xbCff0801bffC7E687D99Cc224002cbE4CAbc523C"
+            },
+            "visibility": "internal"
+          }
+        ],
+        "scope": 2691,
+        "src": "93:371:11"
+      }
+    ],
+    "src": "32:434:11"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.10+commit.00c0fcaf.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.3",
+  "updatedAt": "2020-08-28T07:02:26.699Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

@@ -3,6 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class IssueDto {
 
+    @ApiProperty({ name: 'email' })
+    @IsString()
+    readonly email: string;
+
     @ApiProperty({ name: "企业账户" })
     @IsString()
     readonly enterpriseAddress: string;

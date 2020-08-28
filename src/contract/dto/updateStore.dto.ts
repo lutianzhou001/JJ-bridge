@@ -2,6 +2,9 @@ import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateStoreDto {
+    @ApiProperty({ name: 'email' })
+    @IsString()
+    readonly email: string;
 
     @ApiProperty({ name: "商户Id" })
     @IsString()

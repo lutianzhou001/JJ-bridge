@@ -6,52 +6,35 @@ import { Log } from './interfaces/log.interface.dto';
 import { Order } from './interfaces/order.interface.dto';
 import { Model } from 'mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import * as Orders from './abi/Orders.json';
+import Web3 from 'web3';
+import * as Orders from '../abi/Orders.json';
+
+const RPC_HOST = 'http://47.75.214.198:8502';
 
 // import redis here
 import {
     REDIS_EXPIRE_KEY_NAME,
     REDIS_EXPIRE_TIME_IN_SECONDS,
     REDIS_PUBLISHER_CLIENT,
-    REDIS_SUBSCRIBER_CLIENT,
 } from './redis.constants';
+import { IResponse } from 'src/common/interfaces/response.interface';
+import { ResponseSuccess } from 'src/common/dto/responseSuccess.dto';
 
 export interface IRedisSubscribeMessage {
     readonly message: string;
     readonly channel: string;
 }
-
-// here we can't import web3 into Ts. For more you can refer to "https://github.com/ethereum/web3.js/issues/1597"
-// tslint:disable-next-line: no-var-requires
-const Web3 = require('web3');
 // tslint:disable-next-line: no-var-requires
 const abiDecoder = require('abi-decoder');
-const web3 = new Web3(new Web3.providers.HttpProvider('http://47.75.214.198:8502'));
+const web3 = new Web3(RPC_HOST);
 
 abiDecoder.addABI(Orders.abi);
-
-
-const queryCurrentBlock = async () => {
-    const blockNumber = await web3.eth.getBlockNumber();
-    return blockNumber;
-};
-
-const queryBlocks = async (blockNumber) => {
-    const block = await web3.eth.getBlock(blockNumber);
-    return block;
-};
-
-const queryTransaction = async (transactionHash) => {
-    const transaction = await web3.eth.getTransaction(transactionHash);
-    return transaction;
-};
 
 @Injectable()
 export class BlockchainService {
     constructor(@InjectModel('Transaction') private readonly transactionModel: Model<Transaction>,
         @InjectModel('Log') private readonly logModel: Model<Log>,
         @InjectModel('Order') private readonly orderModel: Model<Order>,
-        // @Inject(REDIS_SUBSCRIBER_CLIENT) private readonly subClient: Redis,
         @Inject(REDIS_PUBLISHER_CLIENT) private readonly pubClient: Redis,
     ) { }
 
@@ -60,12 +43,9 @@ export class BlockchainService {
         await this.fetch();
     }
 
-    async migrate() { }
-
     async fetch() {
         try {
-            // tslint:disable-next-line: no-console
-            const currentBlock = await queryCurrentBlock().catch(err => console.log(err));
+            const currentBlock = await web3.eth.getBlockNumber();
             // tslint:disable-next-line: no-console
             const transactionsFromDb = await this.transactionModel.find().exec();
             let maxBlock: number = 0;
@@ -77,12 +57,10 @@ export class BlockchainService {
             }
             // tslint:disable-next-line:prefer-for-of
             for (let i = maxBlock + 1; i < currentBlock - 10; i++) {
-                // tslint:disable-next-line: no-console
-                const block = await queryBlocks(i).catch(err => console.log(err));
+                const block = await web3.eth.getBlock(i);
                 // tslint:disable-next-line: prefer-for-of
                 for (let j = 0; j < block.transactions.length; j++) {
-                    // tslint:disable-next-line: no-console
-                    const transaction = await queryTransaction(block.transactions[j]).catch(err => console.log(err));
+                    const transaction = await block.transactions[j];
                     await this.decodeTransaction(transaction);
                 }
                 await this.pubClient.set('maxBlock', JSON.stringify(block.number), REDIS_EXPIRE_KEY_NAME, REDIS_EXPIRE_TIME_IN_SECONDS);
@@ -90,6 +68,25 @@ export class BlockchainService {
         } catch (err) {
             return err;
         }
+    }
+
+    async getBlockNumber(): Promise<IResponse> {
+        const res = await web3.eth.getBlockNumber();
+        return new ResponseSuccess('QUERY_BLOCK_NUMBER_SUCCESS', res);
+    }
+
+    async getBlock(blockNumber: number): Promise<IResponse> {
+        const block = await web3.eth.getBlock(blockNumber);
+        return new ResponseSuccess('QUERY_BLOCK_SUCCESS', block);
+    }
+
+    async createAddress(): Promise<any> {
+        const addressCreated = await web3.eth.accounts.create();
+        const res = {
+            address: addressCreated.address,
+            privateKey: addressCreated.privateKey,
+        };
+        return res;
     }
 
     async decodeTransaction(transaction: any) {

@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Delete, Param } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { BlockchainService } from './blockchain.service';
+import { GetBlockDto } from './dto/getBlock.dto';
 // 总路由
 @Controller('blockchain')
 export class BlockchainController {
@@ -11,9 +12,13 @@ export class BlockchainController {
     return this.blockchainService.fetch();
   }
 
-  @Post('/migrate')
-  async migrate() {
-    return this.blockchainService.migrate();
-    // return this.blockchainService.migrate();
+  @Post('/getBlockNumber')
+  async getBlockNumber() {
+    return this.blockchainService.getBlockNumber();
+  }
+
+  @Post('/getBlock')
+  async getBlock(@Body() getBlockDto: GetBlockDto) {
+    return this.blockchainService.getBlock(getBlockDto.blockNumber);
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { ContractService } from './contract.service';
 import { AppendStoreDto } from './dto/appendStore.dto';
 import { AppendEnterpriseDto } from './dto/appendEnterprise.dto';
@@ -19,6 +19,9 @@ import { JJTransferDto } from './dto/jjTransfer.dto';
 import { CouponTransferDto } from './dto/couponTransfer.dto';
 import { RefundDto } from './dto/refund.dto';
 import { WithdrawDto } from './dto/withdraw.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/common/guards/roles.guards';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @Controller('contract')
 export class ContractController {
@@ -33,59 +36,68 @@ export class ContractController {
     // 注册路由
     @Post('/issue')
     async issue(@Body() issueDto: IssueDto) {
-        return this.contractService.issue(issueDto.enterpriseAddress, issueDto.amount);
+        return this.contractService.issue(issueDto.email, issueDto.enterpriseAddress, issueDto.amount);
     }
 
     @Post('/burnJJToken')
     async burnJJToken(@Body() burnJJTokenDto: BurnJJTokenDto) {
-        return this.contractService.burnJJToken(burnJJTokenDto.address, burnJJTokenDto.amount);
+        return this.contractService.burnJJToken(burnJJTokenDto.email, burnJJTokenDto.address, burnJJTokenDto.amount);
     }
 
     @Post('/burnCoupons')
     async burnCoupons(@Body() burnCouponsDto: BurnCouponsDto) {
-        return this.contractService.burnCoupons(burnCouponsDto.address, burnCouponsDto.amount);
+        return this.contractService.burnCoupons(burnCouponsDto.email, burnCouponsDto.address, burnCouponsDto.amount);
     }
 
     @Post('setFeeAddress')
     async setFeeAddress(@Body() setFeeAddressDto: SetFeeAddressDto) {
-        return this.contractService.setFeeAddress(setFeeAddressDto.feeAddress);
+        return this.contractService.setFeeAddress(setFeeAddressDto.email, setFeeAddressDto.feeAddress);
     }
 
-    @Post('setAdmin')
-    async setAdmin(@Body() setAdminDto: SetAdminDto) {
-        return this.contractService.setAdmin(setAdminDto.adminAddress);
-    }
-
+    @UseGuards(RolesGuard)
+    @Roles('User')
+    @UseGuards(AuthGuard('jwt'))
     @Post('appendStore')
     async appendStore(@Body() appendStoreDto: AppendStoreDto) {
-        return this.contractService.appendStore(appendStoreDto.storeAddress, appendStoreDto.storeId, appendStoreDto.storeName);
+        return this.contractService.appendStore(appendStoreDto.email, appendStoreDto.storeAddress, appendStoreDto.storeId, appendStoreDto.storeName);
     }
 
+    @UseGuards(RolesGuard)
+    @Roles('User')
+    @UseGuards(AuthGuard('jwt'))
     @Post('appendEnterprise')
     async appendEnterprise(@Body() appendEnterpriseDto: AppendEnterpriseDto) {
         // tslint:disable-next-line: max-line-length
-        return this.contractService.appendEnterprise(appendEnterpriseDto.enterpriseAddress, appendEnterpriseDto.enterpriseId, appendEnterpriseDto.enterpriseName);
+        return this.contractService.appendEnterprise(appendEnterpriseDto.email, appendEnterpriseDto.enterpriseAddress, appendEnterpriseDto.enterpriseId, appendEnterpriseDto.enterpriseName);
+    }
+
+    @UseGuards(RolesGuard)
+    @Roles('User')
+    @UseGuards(AuthGuard('jwt'))
+    @Post('setAdmin')
+    async setAdmin(@Body() setAdminDto: SetAdminDto) {
+        return this.contractService.setAdmin(setAdminDto.email, setAdminDto.adminAddress);
     }
 
     @Post('updateStore')
     async updateStore(@Body() updateStoreDto: UpdateStoreDto) {
-        return this.contractService.updateStore(updateStoreDto.storeAddress, updateStoreDto.storeId, updateStoreDto.storeName);
+        return this.contractService.updateStore(updateStoreDto.email, updateStoreDto.storeAddress, updateStoreDto.storeId, updateStoreDto.storeName);
     }
 
     @Post('updateEnterprise')
     async updateEnterprise(@Body() updateEnterpriseDto: UpdateEnterpriseDto) {
         // tslint:disable-next-line: max-line-length
-        return this.contractService.updateEnterprise(updateEnterpriseDto.enterpriseAddress, updateEnterpriseDto.enterpriseId, updateEnterpriseDto.enterpriseName);
+        return this.contractService.updateEnterprise(updateEnterpriseDto.email, updateEnterpriseDto.enterpriseAddress, updateEnterpriseDto.enterpriseId, updateEnterpriseDto.enterpriseName);
     }
 
     @Post('deleteStore')
     async deleteStore(@Body() deleteStoreDto: DeleteStoreDto) {
-        return this.contractService.deleteStore(deleteStoreDto.storeId);
+        return this.contractService.deleteStore(deleteStoreDto.email, deleteStoreDto.storeId);
     }
 
     @Post('deleteEnterprise')
     async deleteEnterprise(@Body() deleteEnterpriseDto: DeleteEnterpriseDto) {
-        return this.contractService.deleteEnterprise(deleteEnterpriseDto.enterpriseId);
+        return this.contractService.deleteEnterprise(deleteEnterpriseDto.email, deleteEnterpriseDto.enterpriseId);
     }
 
     // Coupon通用接口
@@ -101,33 +113,33 @@ export class ContractController {
 
     @Post('mintJJToken')
     async mintJJToken(@Body() mintJJTokenDto: MintJJTokenDto) {
-        return this.contractService.mintJJToken(mintJJTokenDto.address, mintJJTokenDto.amount);
+        return this.contractService.mintJJToken(mintJJTokenDto.email, mintJJTokenDto.address, mintJJTokenDto.amount);
     }
 
     @Post('mintCoupons')
     async mintCoupons(@Body() mintCouponsDto: MintCouponsDto) {
-        return this.contractService.mintCoupons(mintCouponsDto.address, mintCouponsDto.amount);
+        return this.contractService.mintCoupons(mintCouponsDto.email, mintCouponsDto.address, mintCouponsDto.amount);
     }
 
     @Post('jjTranfer')
     async jjTransfer(@Body() jjTransferDto: JJTransferDto) {
-        return this.contractService.jjTransfer(jjTransferDto.address, jjTransferDto.amount);
+        return this.contractService.jjTransfer(jjTransferDto.email, jjTransferDto.address, jjTransferDto.amount);
     }
 
     @Post('couponTransfer')
     async couponTransfer(@Body() couponTransferDto: CouponTransferDto) {
         // tslint:disable-next-line: max-line-length
-        return this.contractService.couponTransfer(couponTransferDto.address, couponTransferDto.amount, couponTransferDto.orderId, couponTransferDto.orderDetailId, couponTransferDto.orderContent, couponTransferDto.orderDetailContent);
+        return this.contractService.couponTransfer(couponTransferDto.email, couponTransferDto.address, couponTransferDto.amount, couponTransferDto.orderId, couponTransferDto.orderDetailId, couponTransferDto.orderContent, couponTransferDto.orderDetailContent);
     }
 
     @Post('refund')
     async refund(@Body() refundDto: RefundDto) {
         // tslint:disable-next-line: max-line-length
-        return this.contractService.refund(refundDto.address, refundDto.amount, refundDto.orderId, refundDto.orderDetailId, refundDto.orderContent, refundDto.orderDetailContent);
+        return this.contractService.refund(refundDto.email, refundDto.address, refundDto.amount, refundDto.orderId, refundDto.orderDetailId, refundDto.orderContent, refundDto.orderDetailContent);
     }
 
     @Post('withdraw')
     async withdraw(@Body() withdrawDto: WithdrawDto) {
-        return this.contractService.withdraw(withdrawDto.amount);
+        return this.contractService.withdraw(withdrawDto.email, withdrawDto.amount);
     }
 }
